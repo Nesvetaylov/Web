@@ -6,7 +6,7 @@ $dbname = "u67281";
 
 
 $fio = $phone = $email = $birthdate = $gender = '';
-$fio = $_POST['FIO'];
+$fio = $_POST['fio'];
 $phone = $_POST['PHONE'];
 $email = $_POST['EMAIL'];
 $birthdate = $_POST['BIRTHDATE'];

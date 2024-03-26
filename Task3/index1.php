@@ -6,12 +6,12 @@ $dbname = "u67281";
 
 
 $fio = $phone = $email = $birthdate = $gender = '';
-$fio = $_POST['fio'];
-$phone = $_POST['phone'];
-$email = $_POST['email'];
-$birthdate = $_POST['birthdate'];
-$gender = $_POST['gender'];
-$bio = $_POST['bio'];
+$fio = $_POST['FIO'];
+$phone = $_POST['PHONE'];
+$email = $_POST['EMAIL'];
+$birthdate = $_POST['BIRTHDATE'];
+$gender = $_POST['GENDER'];
+$bio = $_POST['BIOGRAFY'];
 $langs = $_POST['Lang_Prog'];
 $langs_check = ['Pascal', 'C', 'C++', 'JavaScript', 'PHP', 'Python', 'Java', 'Haskel', 'Clojure', 'Prolog', 'Scala'];
 function checkLangs($langs, $langs_check) {
@@ -44,7 +44,7 @@ if (empty($phone) || !preg_match('/^[0-9+]+$/', $phone)) {
     $errors = TRUE;
 }
 
-if (empty($email) || !filter_var($email, FILTER_VALIDATE_email)) {
+if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $errors = TRUE;
 }
 
@@ -71,7 +71,7 @@ try {
     $conn = new PDO("mysql:host=localhost;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     echo "Connected successfully ";
-    $sql = "INSERT INTO request (fio, phone, email, birthdate, gender, bio)
+    $sql = "INSERT INTO request (FIO, PHONE, EMAIL, BIRTHDATE, GENDER, BIOGRAFY)
 VALUES ('$fio', '$phone', '$email', '$birthdate', '$gender', '$bio')";
     $stmt = $conn->prepare($sql);
     $stmt->execute();

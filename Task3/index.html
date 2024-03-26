@@ -9,15 +9,13 @@
 <body>
     <h4 class="list" id="forms">ФОРМЫ</h4>
     <br>
-    <form action="index1.php" method="POST">
-        <label>
-            Full name:
-            <input class="lab" type="text">
-        </label>
-        <label>
-            <br>Phone number:
-            <input class="lab" type="tel">
-        </label>
+    <form action="/" method="POST">
+        <label for="FIO">Full name:</label>
+        <input class="lab" type="text" id="FIO" name="FIO" required>
+
+        <label for="PHONE">Phone number:</label>
+        <input class="lab" type="tel" id="PHONE" name="PHONE" required>
+
         <label>
             <br>e-mail:
             <input class="lab" name="field-email" type="email">

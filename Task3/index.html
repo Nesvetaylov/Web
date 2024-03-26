@@ -1,4 +1,4 @@
-1<head>
+<head>
     <meta charset="utf-8">
     <title>
         <a 3 Задание>
@@ -12,24 +12,21 @@
     <form action="index1.php" method="POST">
         <label for="FIO">Full name:</label>
         <input class="lab" type="text" id="FIO" name="FIO" required>
-
+        <br>
         <label for="PHONE">Phone number:</label>
         <input class="lab" type="tel" id="PHONE" name="PHONE" required>
-
-        <label>
-            <br>e-mail:
-            <input class="lab" name="field-email" type="email">
-        </label><br>
-        Date of Birth: <label>
-            <input class="lab" name="field-date" value="2023-09-24" type="date">
-        </label><br>
-        Choose gender:
-        <label>
-            <input type="radio" name="gender" value="male" checked>Мужской
-        </label>
-        <label>
-            <input type="radio" name="gender" value="female">Женский
-        </label><br>
+        <br>
+        <label for="EMAIL">e-mail:</label>
+        <input class="lab" type="email" id="EMAIL" name="EMAIL" required>
+        <br>
+        <label for="BIRTHDATE">Date of Birth:</label>
+        <input class="lab" value="2023-09-24" type="date" id="BIRTHDATE" name="BIRTHDATE" required>
+        <br>
+        <label for="GENDER">Choose gender:</label>
+        <input type="radio" id="male" name="GENDER" value="male" required>
+        <label for="male">Мужской</label>
+        <input type="radio" id="female" name="GENDER" value="female" required>
+        <label for="male">Женский</label>
         <label>
             <select class="lab" name="field-name-4">
                 <option value=""> Your favorite language</option>

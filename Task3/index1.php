@@ -6,19 +6,24 @@ $dbname = "u67281";
 
 
 $fio = $phone = $email = $birthdate = $gender = '';
-$fio = isset($_POST['FIO']) ? $_POST['FIO'] : '';
-$phone = isset($_POST['PHONE']) ? $_POST['PHONE'] : '';
-$email = isset($_POST['EMAIL']) ? $_POST['EMAIL'] : '';
-$birthdate = isset($_POST['BIRTHDATE']) ? $_POST['BIRTHDATE'] : '';
-$gender = isset($_POST['GENDER']) ? $_POST['GENDER'] : '';
-$bio = isset($_POST['BIOGRAFY']) ? $_POST['BIOGRAFY'] : '';
-$langs = isset($_POST['Lang_Prog']) ? $_POST['Lang_Prog'] : [];
+$fio = $_POST['FIO'];
+$phone = $_POST['PHONE'];
+$email = $_POST['EMAIL'];
+$birthdate = $_POST['BIRTHDATE'];
+$gender = $_POST['GENDER'];
+$bio = $_POST['BIOGRAFY'];
+$langs = $_POST['Lang_Prog'];
 $langs_check = ['Pascal', 'C', 'C++', 'JavaScript', 'PHP', 'Python', 'Java', 'Haskel', 'Clojure', 'Prolog', 'Scala'];
 function checkLangs($langs, $langs_check) {
-    foreach ($langs as $lang) {
-        if (!in_array($lang, $langs_check)) {
-            return FALSE;
+    for ($i = 0; $i < count($langs); $i++) {
+        $isTrue = FALSE;
+        for ($j = 0; $j < count($langs_check); $j++) {
+            if ($langs[$i] === $langs_check[$j]) {
+                $isTrue = TRUE;
+                break;
+            }
         }
+        if ($isTrue === FALSE) return FALSE;
     }
     return TRUE;
 }

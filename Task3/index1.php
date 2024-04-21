@@ -1,8 +1,21 @@
 <?php
+header('Content-Type: text/html; charset=UTF-8');
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    // В суперглобальном массиве $_GET PHP хранит все параметры, переданные в текущем запросе через URL.
+    if (!empty($_GET['save'])) {
+      // Если есть параметр save, то выводим сообщение пользователю.
+      print('Спасибо, результаты сохранены.');
+    }
+    // Включаем содержимое файлаindex.html
+    include('index.html');
+    // Завершаем работу скрипта.
+    exit();
+  }
+  include("../Secret.php");
 $servername = "localhost";
-$username = "u67281";
-$password = "9872763";
-$dbname = "u67281";
+$username = username;
+$password = password;
+$dbname = username;
 
 
 $fio = $phone = $email = $birthdate = $gender = '';

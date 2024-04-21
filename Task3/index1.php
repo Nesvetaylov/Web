@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 
 $errors = FALSE;
 
-if (empty($_POST['fio']) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,150}$/u', $_POST['fio'])) {
+if (empty($_POST['FIO']) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,150}$/u', $_POST['FIO'])) {
     $errors = TRUE;
     echo 'Ошибка ФИО';
 }
@@ -76,10 +76,12 @@ if ($gender != 'male' && $gender != 'female') {
     echo 'Ошибка женщины или мужчины';
 }
 
+/*
 if (!checkLangs($langs, $langs_check)) {
     $errors = TRUE;
     echo 'Ошибка Языка';
 }
+*/
 
 if ($errors === TRUE) {
     echo 'mistake';

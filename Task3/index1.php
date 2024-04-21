@@ -25,7 +25,6 @@ $email = $_POST['EMAIL'];
 $birthdate = $_POST['BIRTHDATE'];
 $gender = $_POST['GENDER'];
 $bio = $_POST['BIOGRAFY'];
-$langs = $_POST['Lang_Prog'];
 $langs = isset($_POST['Lang_Prog']) ? (array)$_POST['Lang_Prog'] : [];
 $langs_check = ['Pascal', 'C', 'C++', 'JavaScript', 'PHP', 'Python', 'Java', 'Haskel', 'Clojure', 'Prolog', 'Scala'];
 function checkLangs($langs, $langs_check) {

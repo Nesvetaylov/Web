@@ -12,7 +12,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     exit();
   }
   include("../Secret.php");
-$servername = "localhost";
 $username = username;
 $password = password;
 $dbname = username;

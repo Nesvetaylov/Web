@@ -104,7 +104,7 @@ try {
         $Lang_prepare->execute([$lang]);
         $lang_ID=$Lang_prepare->fetchColumn();
         echo "$lang_ID <br>";
-        $Answer_prepare->execute([$lastId,$lang_ID]);
+        $Answer_prepare->execute([$lastId,$lang]);
     }
     echo nl2br("\nNew record created successfully");
 } catch(PDOException $e) {

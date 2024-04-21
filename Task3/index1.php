@@ -92,22 +92,18 @@ try {
     $conn = new PDO("mysql:host=localhost;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     echo "Connected successfully ";
-    $sql = "INSERT INTO request (FIO, PHONE, EMAIL, BIRTHDATE, GENDER, BIOGRAFY)
-VALUES ('$fio', '$phone', '$email', '$birthdate', '$gender', '$bio')";
+    $sql = "INSERT INTO REQUEST (FIO, PHONE, EMAIL, BIRTHDATE, GENDER, BIOGRAFY) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->execute();
+    $stmt->execute([$fio, $phone, $email, $birthdate, $gender, $bio]);
     $lastId = $conn->lastInsertId();
-
-    for ($i = 0; $i < count($langs); $i++) {
-        $sql = "SELECT Lang_ID FROM Lang_Prog WHERE Lang_NAME = :langName";
-        $stmt = $conn->prepare($sql);
-        $stmt->bindParam(':langName', $langs[$i]);
-        $stmt->execute();
-        $result = $stmt->fetch();
-        $Lang_ID = $result['Lang_ID'];
-        $sql = "INSERT INTO request_to_lang (ID, Lang_ID) VALUES ($lastId, $Lang_ID)";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute();
+    $Lang_selection = "SELECT Lang_ID FROM Lang_Prog WHERE Lang_NAME = ?";
+    $Lang_prepare = $conn->prepare($Lang_selection);
+    $Answer_insert = "INSERT INTO ANSWER (ID, Lang_ID) VALUES (?, ?)";
+    $Answer_prepare = $conn->prepare($Answer_insert);
+    foreach($_POST['Lang_Prog'] as $lang){
+        $Lang_prepare->execute([$lang]);
+        $lang_ID=$Lang_prepare->fetchColumn();
+        $Answer_prepare->execute([$lastId,$lang_ID]);
     }
     echo nl2br("\nNew record created successfully");
 } catch(PDOException $e) {

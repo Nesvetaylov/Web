@@ -100,8 +100,10 @@ try {
     $Answer_insert = "INSERT INTO ANSWER (ID, Lang_ID) VALUES (?, ?)";
     $Answer_prepare = $conn->prepare($Answer_insert);
     foreach($_POST['Lang_Prog'] as $lang){
+        echo "<br>$lang - ";
         $Lang_prepare->execute([$lang]);
         $lang_ID=$Lang_prepare->fetchColumn();
+        echo "$lang_ID <br>";
         $Answer_prepare->execute([$lastId,$lang_ID]);
     }
     echo nl2br("\nNew record created successfully");

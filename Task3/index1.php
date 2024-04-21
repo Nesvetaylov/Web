@@ -51,28 +51,34 @@ $errors = FALSE;
 
 if (empty($fio) || !preg_match('/^[A-Za-z]+$/', $fio)) {
     $errors = TRUE;
+    echo 'Ошибка ФИО';
 }
 
 if (empty($phone) || !preg_match('/^[0-9+]+$/', $phone)) {
     $errors = TRUE;
+    echo 'Ошибка Телефона';
 }
 
 if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
     $errors = TRUE;
+    echo 'Ошибка ЕМАИЛ';
 }
 
 
 $dateObject = DateTime::createFromFormat('Y-m-d', $birthdate);
 if ($dateObject === false || $dateObject->format('Y-m-d') !== $birthdate) {
     $errors = TRUE;
+    echo 'Ошибка Дата рождение';
 }
 
 if ($gender != 'male' && $gender != 'female') {
     $errors = TRUE;
+    echo 'Ошибка женщины или мужчины';
 }
 
 if (!checkLangs($langs, $langs_check)) {
     $errors = TRUE;
+    echo 'Ошибка Языка';
 }
 
 if ($errors === TRUE) {

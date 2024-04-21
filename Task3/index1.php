@@ -26,6 +26,7 @@ $birthdate = $_POST['BIRTHDATE'];
 $gender = $_POST['GENDER'];
 $bio = $_POST['BIOGRAFY'];
 $langs = $_POST['Lang_Prog'];
+$langs = isset($_POST['Lang_Prog']) ? (array)$_POST['Lang_Prog'] : [];
 $langs_check = ['Pascal', 'C', 'C++', 'JavaScript', 'PHP', 'Python', 'Java', 'Haskel', 'Clojure', 'Prolog', 'Scala'];
 function checkLangs($langs, $langs_check) {
     for ($i = 0; $i < count($langs); $i++) {
@@ -49,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] != 'POST') {
 
 $errors = FALSE;
 
-if (empty($fio) || !preg_match('/^[A-Za-z]+$/', $fio)) {
+if (empty($_POST['fio']) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,150}$/u', $_POST['fio'])) {
     $errors = TRUE;
     echo 'Ошибка ФИО';
 }

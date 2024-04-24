@@ -5,7 +5,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // В суперглобальном массиве $_GET PHP хранит все параметры, переданные в текущем запросе через URL.
     if (!empty($_COOKIE['SAVE'])) {
       // Если есть параметр save, то выводим сообщение пользователю.
+      $messages[]=unserialize($_COOKIE['MAS']);
       setcookie('SAVE', '', 100000);
+      setcookie('MAS', '', 100000);
     $messages[]='Спасибо, результаты сохранены.';
     }
     // Включаем содержимое файла form.php
@@ -158,12 +160,13 @@ if (empty($langs)) {
 else{
 setcookie('Lang_Prog_value', serialize($_POST['Lang_Prog']), time() + 30 * 24 * 60 * 60);
 }
-$messages[]='works mb';
+$mas=array();
+$mas[]='works mb';
 // Иначе, если запрос был методом POST, т.е. нужно проверить данные и сохранить их в XML-файл.
 if ($errors) {
   // При наличии ошибок перезагружаем страницу и завершаем работу скрипта.
   header('Location: index.php');
-  $messages[]='Найдена ошибка дружище';
+  $mas[]='Найдена ошибка дружище';
   exit();
 }
 else {
@@ -177,7 +180,7 @@ else {
   setcookie('Lang_Prog_error', '', 100000);
   // TODO: тут необходимо удалить остальные Cookies.
 }
-$messages[]='hmmmmm';
+$mas[]='hmmmmm';
 try {
     $conn = new PDO("mysql:host=localhost;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -195,13 +198,15 @@ try {
         $lang_ID=$Lang_prepare->fetchColumn();
         $Answer_prepare->execute([$lastId,$lang_ID]);
     }
-    echo nl2br("\nNew record created successfully");
+    $mas[]='hey';
+
 } catch(PDOException $e) {
     echo "Connection failed: " . $e->getMessage();
 }
 $conn = null;
 // Сохраняем куки с признаком успешного сохранения.
 setcookie('SAVE', '1');
+setcookie('MAS', serialize($mas));
 // Делаем перенаправление.
 header('Location: index.php');
 ?>

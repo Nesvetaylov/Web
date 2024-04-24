@@ -202,7 +202,7 @@ try {
     $mas[]='hey';
 
 } catch(PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
+  $mas[]="Connection failed: " . $e->getMessage();
 }
 $conn = null;
 // Сохраняем куки с признаком успешного сохранения.

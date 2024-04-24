@@ -185,7 +185,7 @@ try {
     echo "Connected successfully ";
     $sql = "INSERT INTO REQUEST (FIO, PHONE, EMAIL, BIRTHDATE, GENDER, BIOGRAFY) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->execute([$fio, $phone, $email, $birthdate, $gender, $bio]);
+    $stmt->execute([$fio, $phone, $email, $birthdate, $gender, $biografy]);
     $lastId = $conn->lastInsertId();
     $Lang_selection = "SELECT Lang_ID FROM Lang_Prog WHERE Lang_NAME = ?";
     $Lang_prepare = $conn->prepare($Lang_selection);

@@ -5,7 +5,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     // В суперглобальном массиве $_GET PHP хранит все параметры, переданные в текущем запросе через URL.
     if (!empty($_COOKIE['SAVE'])) {
       // Если есть параметр save, то выводим сообщение пользователю.
-      $messages[]=unserialize($_COOKIE['MAS']);
+      $mase=unserialize($_COOKIE['MAS']);
+      foreach($mase as $m){$messages[]=$m;}
       setcookie('SAVE', '', 100000);
       setcookie('MAS', '', 100000);
     $messages[]='Спасибо, результаты сохранены.';

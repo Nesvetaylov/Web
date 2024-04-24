@@ -23,7 +23,7 @@
       print('</div>');
     }
 ?>
-<form action="index.php" method="POST">
+<form class='form-container' action="index.php" method="POST">
         <label>
           <strong> Фамилия имя отчество:</strong>
           <br>

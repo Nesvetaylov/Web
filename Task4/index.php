@@ -3,8 +3,9 @@ header('Content-Type: text/html; charset=UTF-8');
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   $messages=array();
     // В суперглобальном массиве $_GET PHP хранит все параметры, переданные в текущем запросе через URL.
-    if (!empty($_GET['save'])) {
+    if (!empty($_COOKIE['SAVE'])) {
       // Если есть параметр save, то выводим сообщение пользователю.
+      setcookie('SAVE', '', 100000);
     $messages[]='Спасибо, результаты сохранены.';
     }
     // Включаем содержимое файла form.php

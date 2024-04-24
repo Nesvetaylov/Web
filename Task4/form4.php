@@ -1,13 +1,11 @@
-<head>
-    <meta charset="utf-8">
-    <title>
-        <a 3 Задание>
-        </a>
-    </title>
-</head>
-
-<body>
-<?php
+<html> 
+  <head>
+    <title>task 4</title>
+    <meta charset="UTF-8">
+    <?php echo '<link rel="stylesheet" type="text/css" href="formStyle1.css" media="screen" />'; ?>
+  </head>
+  <body>
+    <?php
     if (!empty($messages)) {
       print('<div id="messages">');
       // Выводим все сообщения.
@@ -16,51 +14,81 @@
       }
       print('</div>');
     }
-?>
-<form action="index.php" method="POST">
-    <label for="FIO">Full name:</label>
-    <input class="lab" type="text" id="FIO" name="FIO" required>
-    <br>
-    <label for="PHONE">Phone number:</label>
-    <input class="lab" type="tel" id="PHONE" name="PHONE" required>
-    <br>
-    <label for="EMAIL">e-mail:</label>
-    <input class="lab" type="email" id="EMAIL" name="EMAIL" required>
-    <br>
-    <label for="BIRTHDATE">Date of Birth:</label>
-    <input class="lab" value="2023-09-24" type="date" id="BIRTHDATE" name="BIRTHDATE" required>
-    <br>
-    <label for="GENDER">Choose gender:</label>
-    <input type="radio" id="male" name="GENDER" value="male" required>
-    <label for="male">Мужской</label>
-    <input type="radio" id="female" name="GENDER" value="female" required>
-    <label for="male">Женский</label>
-    <br>
-    <label>
-        <select class="lab" name="Lang_Prog[]" multiple="multiple">
-            <option value=""> Your favorite language</option>
-            <option value="1"> Pascal</option>
-            <option value="2"> C</option>
-            <option value="3"> C++</option>
-            <option value="4"> JavaScript</option>
-            <option value="5"> PHP</option>
-            <option value="6"> Python</option>
-            <option value="7"> Java</option>
-            <option value="8"> Haskel</option>
-            <option value="9"> Clojure</option>
-            <option value="10"> Prolog</option>
-            <option value="11"> Scala</option>
-        </select>
-    </label>
-    <br>
-    <label for="BIOGRAFY">Biography:</label>
-    <br>
-    <textarea class="lab" name="BIOGRAFY" required> Ваша история </textarea>
-    <br>
-    <label>
-        <input type="checkbox" checked="checked">
-    </label> С контрактом ознакомлен(а)<br>
-    <button class="button"> Сохранить </button>
-    <input class="button" type="submit" value="Отправить">
-</form>
-</body>
+    ?>
+    <form action="index.php" method="POST" id="svyaz">
+      <h3> Для обратной связи оставьте свои данные: </h3>
+      <label>
+          <strong> Фамилия имя отчество:</strong>
+          <br>
+          <input name="fio" type="text"
+          <?php if ($errors['fio']) {print 'class="error"';} ?> value="<?php print $values['fio']; ?>" placeholder="ФИО" />
+      </label>
+      <br>
+      <label>
+          <strong>Номер телефона: </strong>
+          <br>
+          <input name="phone" type="tel" pattern="\+7\-[0-9]{3}\-[0-9]{3}\-[0-9]{2}\-[0-9]{2}"
+          <?php if ($errors['phone']) {print 'class="error"';} ?> value="<?php print $values['phone']; ?>" placeholder="+7(___)___-__-__" />
+      </label>
+      <br>
+      <label>
+          <strong> Введите вашу почту:</strong>
+          <br>
+          <input name="email" type="email"
+          <?php if ($errors['email']) {print 'class="error"';} ?> value="<?php print $values['email']; ?>" placeholder="email" />
+      </label>
+      <br>
+      <label>
+          <strong> Дата рождения:</strong>
+          <br>
+          <input name="birthdate" type="date"
+          <?php if ($errors['birthdate']) {print 'class="error"';} ?> value="<?php print $values['birthdate']; ?>" />
+      </label>
+      <br>
+      <strong> Пол:</strong>
+      <label>
+          <input type="radio" name="gender" required value="male" <?php if ($values['gender'] === 'male') { print 'checked'; } ?>>
+          Мужской
+      </label>
+      <label>
+          <input type="radio" name="gender" required value="female" <?php if ($values['gender'] === 'female') { print 'checked'; } ?>>
+          Женский
+      </label>
+      <br>
+      <label>
+          <strong>Любимый язык программирования:</strong>
+          <br>
+          <select name="selections[]" multiple="multiple" <?php if ($errors['selections']) {print 'class="error"';} ?>>
+              <option value="1" <?php if (in_array('1', $values['selections'])) { print 'selected'; } ?>> Lua</option>
+              <option value="2" <?php if (in_array('2', $values['selections'])) { print 'selected'; } ?>> C</option>
+              <option value="3" <?php if (in_array('3', $values['selections'])) { print 'selected'; } ?>> C++</option>
+              <option value="4" <?php if (in_array('4', $values['selections'])) { print 'selected'; } ?>> C#</option>
+              <option value="5" <?php if (in_array('5', $values['selections'])) { print 'selected'; } ?>> PHP</option>
+              <option value="6" <?php if (in_array('6', $values['selections'])) { print 'selected'; } ?>> Python</option>
+              <option value="7" <?php if (in_array('7', $values['selections'])) { print 'selected'; } ?>> Java</option>
+              <option value="8" <?php if (in_array('8', $values['selections'])) { print 'selected'; } ?>> JavaScript</option>
+              <option value="9" <?php if (in_array('9', $values['selections'])) { print 'selected'; } ?>> Ruby</option>
+              <option value="10" <?php if (in_array('10', $values['selections'])) { print 'selected'; } ?>> Go</option>
+          </select>
+      </label>
+      <br>
+      <label>
+          <strong> Биография:</strong>
+          <br>
+          <textarea name="biography" placeholder="Я был писателем, пока не... " 
+          <?php if ($errors['biography']) {print 'class="error"';} ?>><?php print $values['biography']; ?></textarea>
+      </label>
+      <br>
+      <label>
+          <input type="checkbox" name="check" 
+          <?php if ($errors['check']) {print 'class="error"';} ?> value=""/>
+          c контрактом ознакомлен(а)
+      </label>
+      <br>
+      <input type="submit" value="Сохранить" />
+  </form>
+  <?php 
+  ?>
+  </body>
+</html>
+

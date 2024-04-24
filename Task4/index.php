@@ -59,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $values['BIRTHDATE'] = empty($_COOKIE['BIRTHDATE_value']) ? '' : $_COOKIE['BIRTHDATE_value'];
     $values['GENDER'] = empty($_COOKIE['GENDER_value']) ? '' : $_COOKIE['GENDER_value'];
     $values['BIOGRAFY'] = empty($_COOKIE['BIOGRAFY_value']) ? '' : $_COOKIE['BIOGRAFY_value'];
-    $values['Lang_Prog'] = empty($_COOKIE['Lang_Prog_value']) ? '' : $_COOKIE['Lang_Prog_value'];
+    $values['Lang_Prog'] = empty($_COOKIE['Lang_Prog_value']) ? array() : unserialize($_COOKIE['Lang_Prog_value']);
     include('form4.php');
     // Завершаем работу скрипта.
     exit();
@@ -154,7 +154,7 @@ if (empty($langs)) {
   setcookie('Lang_Prog_error', '1', time() + 24 * 60 * 60);
 }
 else{
-setcookie('Lang_Prog_value', $_POST['Lang_Prog'], time() + 30 * 24 * 60 * 60);
+setcookie('Lang_Prog_value', serialize($_POST['Lang_Prog']), time() + 30 * 24 * 60 * 60);
 }
 
 // Иначе, если запрос был методом POST, т.е. нужно проверить данные и сохранить их в XML-файл.
@@ -174,11 +174,6 @@ else {
   setcookie('BIOGRAFY_error', '', 100000);
   // TODO: тут необходимо удалить остальные Cookies.
 }
-
-// Сохраняем куки с признаком успешного сохранения.
-setcookie('SAVE', '1');
-// Делаем перенаправление.
-header('Location: index.php');
 try {
     $conn = new PDO("mysql:host=localhost;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -201,4 +196,8 @@ try {
     echo "Connection failed: " . $e->getMessage();
 }
 $conn = null;
+// Сохраняем куки с признаком успешного сохранения.
+setcookie('SAVE', '1');
+// Делаем перенаправление.
+header('Location: index.php');
 ?>

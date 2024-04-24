@@ -44,9 +44,9 @@
     <input value="2023-09-24" name="BIRTHDATE" <?php if ($errors['BIRTHDATE']) {print 'class="error"';} ?> value="<?php print $values['BIRTHDATE']; ?>">
     <br>
     <label for="GENDER">Choose gender:</label>
-    <input type="radio" id="male" name="GENDER" value="male" <?php if ($errors['GENDER']) {print 'class="error"';} ?> value="<?php print $values['GENDER']; ?>">
+    <input type="radio" id="male" name="GENDER" value="male" <?php if($values['GENDER']=='male'){print 'checked';} ?>>
     <label for="male">Мужской</label>
-    <input type="radio" id="female" name="GENDER" value="female" <?php if ($errors['GENDER']) {print 'class="error"';} ?> value="<?php print $values['GENDER']; ?>">
+    <input type="radio" id="female" name="GENDER" value="female" <?php if($values['GENDER']=='female'){print 'checked';}?>>
     <label for="male">Женский</label>
     <br>
     <label>
@@ -67,7 +67,7 @@
     <br>
     <label for="BIOGRAFY">Biography:</label>
     <br>
-    <textarea  name="BIOGRAFY" <?php if ($errors['BIOGRAFY']) {print 'class="error"';} ?> value="<?php print $values['BIOGRAFY']; ?>"> Ваша история </textarea>
+    <textarea  name="BIOGRAFY" <?php if ($errors['BIOGRAFY']) {print 'class="error"';} ?> placeholder='Ваша история'><?php print $values['BIOGRAFY']; ?></textarea>
     <br>
     <label>
         <input type="checkbox" checked="checked">

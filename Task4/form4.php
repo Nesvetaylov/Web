@@ -17,7 +17,7 @@
       print('</div>');
     }
 ?>
-<form action="index1.php" method="POST">
+<form action="index.php" method="POST">
     <label for="FIO">Full name:</label>
     <input class="lab" type="text" id="FIO" name="FIO" required>
     <br>

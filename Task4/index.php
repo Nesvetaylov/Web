@@ -162,12 +162,10 @@ else{
 setcookie('Lang_Prog_value', serialize($_POST['Lang_Prog']), time() + 30 * 24 * 60 * 60);
 }
 $mas=array();
-$mas[]='works mb';
 // Иначе, если запрос был методом POST, т.е. нужно проверить данные и сохранить их в XML-файл.
 if ($errors) {
   // При наличии ошибок перезагружаем страницу и завершаем работу скрипта.
   header('Location: index.php');
-  $mas[]='Найдена ошибка дружище';
   exit();
 }
 else {
@@ -181,7 +179,6 @@ else {
   setcookie('Lang_Prog_error', '', 100000);
   // TODO: тут необходимо удалить остальные Cookies.
 }
-$mas[]='hmmmmm';
 try {
     $conn = new PDO("mysql:host=localhost;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -199,7 +196,6 @@ try {
         $lang_ID=$Lang_prepare->fetchColumn();
         $Answer_prepare->execute([$lastId,$lang_ID]);
     }
-    $mas[]='hey';
 
 } catch(PDOException $e) {
   $mas[]="Connection failed: " . $e->getMessage();

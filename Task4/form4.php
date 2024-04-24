@@ -1,94 +1,203 @@
-<html> 
-  <head>
-    <title>task 4</title>
-    <meta charset="UTF-8">
-    <?php echo '<link rel="stylesheet" type="text/css" href="formStyle1.css" media="screen" />'; ?>
-  </head>
-  <body>
-    <?php
-    if (!empty($messages)) {
-      print('<div id="messages">');
-      // Выводим все сообщения.
-      foreach ($messages as $message) {
-        print($message);
-      }
-      print('</div>');
+<?php
+header('Content-Type: text/html; charset=UTF-8');
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+    // В суперглобальном массиве $_GET PHP хранит все параметры, переданные в текущем запросе через URL.
+    if (!empty($_GET['save'])) {
+      // Если есть параметр save, то выводим сообщение пользователю.
+      print('Спасибо, результаты сохранены.');
     }
-    ?>
-    <form action="index.php" method="POST" id="svyaz">
-      <h3> Для обратной связи оставьте свои данные: </h3>
-      <label>
-          <strong> Фамилия имя отчество:</strong>
-          <br>
-          <input name="fio" type="text"
-          <?php if ($errors['fio']) {print 'class="error"';} ?> value="<?php print $values['fio']; ?>" placeholder="ФИО" />
-      </label>
-      <br>
-      <label>
-          <strong>Номер телефона: </strong>
-          <br>
-          <input name="phone" type="tel" pattern="\+7\-[0-9]{3}\-[0-9]{3}\-[0-9]{2}\-[0-9]{2}"
-          <?php if ($errors['phone']) {print 'class="error"';} ?> value="<?php print $values['phone']; ?>" placeholder="+7(___)___-__-__" />
-      </label>
-      <br>
-      <label>
-          <strong> Введите вашу почту:</strong>
-          <br>
-          <input name="email" type="email"
-          <?php if ($errors['email']) {print 'class="error"';} ?> value="<?php print $values['email']; ?>" placeholder="email" />
-      </label>
-      <br>
-      <label>
-          <strong> Дата рождения:</strong>
-          <br>
-          <input name="birthdate" type="date"
-          <?php if ($errors['birthdate']) {print 'class="error"';} ?> value="<?php print $values['birthdate']; ?>" />
-      </label>
-      <br>
-      <strong> Пол:</strong>
-      <label>
-          <input type="radio" name="gender" required value="male" <?php if ($values['gender'] === 'male') { print 'checked'; } ?>>
-          Мужской
-      </label>
-      <label>
-          <input type="radio" name="gender" required value="female" <?php if ($values['gender'] === 'female') { print 'checked'; } ?>>
-          Женский
-      </label>
-      <br>
-      <label>
-          <strong>Любимый язык программирования:</strong>
-          <br>
-          <select name="selections[]" multiple="multiple" <?php if ($errors['selections']) {print 'class="error"';} ?>>
-              <option value="1" <?php if (in_array('1', $values['selections'])) { print 'selected'; } ?>> Lua</option>
-              <option value="2" <?php if (in_array('2', $values['selections'])) { print 'selected'; } ?>> C</option>
-              <option value="3" <?php if (in_array('3', $values['selections'])) { print 'selected'; } ?>> C++</option>
-              <option value="4" <?php if (in_array('4', $values['selections'])) { print 'selected'; } ?>> C#</option>
-              <option value="5" <?php if (in_array('5', $values['selections'])) { print 'selected'; } ?>> PHP</option>
-              <option value="6" <?php if (in_array('6', $values['selections'])) { print 'selected'; } ?>> Python</option>
-              <option value="7" <?php if (in_array('7', $values['selections'])) { print 'selected'; } ?>> Java</option>
-              <option value="8" <?php if (in_array('8', $values['selections'])) { print 'selected'; } ?>> JavaScript</option>
-              <option value="9" <?php if (in_array('9', $values['selections'])) { print 'selected'; } ?>> Ruby</option>
-              <option value="10" <?php if (in_array('10', $values['selections'])) { print 'selected'; } ?>> Go</option>
-          </select>
-      </label>
-      <br>
-      <label>
-          <strong> Биография:</strong>
-          <br>
-          <textarea name="biography" placeholder="Я был писателем, пока не... " 
-          <?php if ($errors['biography']) {print 'class="error"';} ?>><?php print $values['biography']; ?></textarea>
-      </label>
-      <br>
-      <label>
-          <input type="checkbox" name="check" 
-          <?php if ($errors['check']) {print 'class="error"';} ?> value=""/>
-          c контрактом ознакомлен(а)
-      </label>
-      <br>
-      <input type="submit" value="Сохранить" />
-  </form>
-  <?php 
-  ?>
-  </body>
-</html>
+    // Включаем содержимое файла form.php
+    $errors=array();
+    $errors['FIO']=!empty($_COOKIE['FIO_error']);
+    $errors['PHONE']=!empty($_COOKIE['PHONE_error']);
+    $errors['EMAIL']=!empty($_COOKIE['EMAIL_error']);
+    $errors['BIRTHDATE']=!empty($_COOKIE['BIRTHDATE_error']);
+    $errors['GENDER']=!empty($_COOKIE['GENDER_error']);
+    $errors['BIOGRAFY']=!empty($_COOKIE['BIOGRAFY_error']);
+    $errors['Lang_Prog']=!empty($_COOKIE['Lang_Prog_error']);
+    if($errors['FIO']){
+      setcookie('FIO_error', '', time() - 24 * 60 * 60);
+      setcookie('FIO_error', '', time() - 24 * 60 * 60);
+      $messages[] = '<div class="error">Заполните имя.</div>';
+    }
+    if($errors['PHONE']){
+      setcookie('PHONE_error', '', time() - 24 * 60 * 60);
+      setcookie('PHONE_error', '', time() - 24 * 60 * 60);
+      $messages[] = '<div class="error">Заполните номер телефона.</div>';
+    }
+    if($errors['EMAIL']){
+      setcookie('EMAIL_error', '', time() - 24 * 60 * 60);
+      setcookie('EMAIL_error', '', time() - 24 * 60 * 60);
+      $messages[] = '<div class="error">Заполните почту.</div>';
+    }
+    if($errors['BIRTHDATE']){
+      setcookie('BIRTHDATE_error', '', time() - 24 * 60 * 60);
+      setcookie('BIRTHDATE_error', '', time() - 24 * 60 * 60);
+      $messages[] = '<div class="error">Заполните дату рождения.</div>';
+    }
+    if($errors['GENDER']){
+      setcookie('GENDER_error', '', time() - 24 * 60 * 60);
+      setcookie('GENDER_error', '', time() - 24 * 60 * 60);
+      $messages[] = '<div class="error">Заполните гендер).</div>';
+    }
+    if($errors['BIOGRAFY']){
+      setcookie('BIOGRAFY_error', '', time() - 24 * 60 * 60);
+      setcookie('BIOGRAFY_error', '', time() - 24 * 60 * 60);
+      $messages[] = '<div class="error">Заполните биографию.</div>';
+    }
+    if($errors['Lang_Prog']){
+      setcookie('Lang_Prog_error', '', time() - 24 * 60 * 60);
+      setcookie('Lang_Prog_error', '', time() - 24 * 60 * 60);
+      $messages[] = '<div class="error">Выберите язык.</div>';
+    }
 
+    //дополнительный enter))
+    $values = array();
+    $values['FIO'] = empty($_COOKIE['FIO_value']) ? '' : $_COOKIE['FIO_value'];
+    $values['PHONE'] = empty($_COOKIE['PHONE_value']) ? '' : $_COOKIE['PHONE_value'];
+    $values['EMAIL'] = empty($_COOKIE['EMAIL_value']) ? '' : $_COOKIE['EMAIL_value'];
+    $values['BIRTHDATE'] = empty($_COOKIE['BIRTHDATE_value']) ? '' : $_COOKIE['BIRTHDATE_value'];
+    $values['GENDER'] = empty($_COOKIE['GENDER_value']) ? '' : $_COOKIE['GENDER_value'];
+    $values['BIOGRAFY'] = empty($_COOKIE['BIOGRAFY_value']) ? '' : $_COOKIE['BIOGRAFY_value'];
+    $values['Lang_Prog'] = empty($_COOKIE['Lang_Prog_value']) ? array() : unserialize($_COOKIE['Lang_Prog_value']);
+    include('form4.php');
+    // Завершаем работу скрипта.
+    exit();
+  }
+  include("../Secret.php");
+$username = username;
+$password = password;
+$dbname = username;
+
+$fio = $phone = $email = $birthdate = $gender = '';
+$fio = $_POST['FIO'];
+$phone = $_POST['PHONE'];
+$email = $_POST['EMAIL'];
+$birthdate = $_POST['BIRTHDATE'];
+$gender = $_POST['GENDER'];
+$biografy = $_POST['BIOGRAFY'];
+$langs = isset($_POST['Lang_Prog']) ? (array)$_POST['Lang_Prog'] : [];
+$langs_check = ['Pascal', 'C', 'C++', 'JavaScript', 'PHP', 'Python', 'Java', 'Haskel', 'Clojure', 'Prolog', 'Scala'];
+function checkLangs($langs, $langs_check) {
+    for ($i = 0; $i < count($langs); $i++) {
+        $isTrue = FALSE;
+        for ($j = 0; $j < count($langs_check); $j++) {
+            if ($langs[$i] === $langs_check[$j]) {
+                $isTrue = TRUE;
+                break;
+            }
+        }
+        if ($isTrue === FALSE) return FALSE;
+    }
+    return TRUE;
+}
+
+
+if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+    echo 'This script only works with POST queries';
+    exit();
+}
+
+$errors = FALSE;
+
+if (empty($_POST['FIO']) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,150}$/u', $_POST['FIO'])) {
+    $errors = TRUE;
+    setcookie('FIO_error', '1', time() + 24 * 60 * 60);
+}
+else{
+  setcookie('FIO_value', $_POST['FIO'], time() + 30 * 24 * 60 * 60);
+}
+
+if (empty($phone) || !preg_match('/^[0-9+]+$/', $phone)) {
+    $errors = TRUE;
+    setcookie('PHONE_error', '1', time() + 24 * 60 * 60);
+}
+else{
+  setcookie('PHONE_value', $_POST['PHONE'], time() + 30 * 24 * 60 * 60);
+}
+
+if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $errors = TRUE;
+    setcookie('EMAIL_error', '1', time() + 24 * 60 * 60);
+}
+else{
+  setcookie('EMAIL_value', $_POST['EMAIL'], time() + 30 * 24 * 60 * 60);
+}
+
+
+$dateObject = DateTime::createFromFormat('Y-m-d', $birthdate);
+if ($dateObject === false || $dateObject->format('Y-m-d') !== $birthdate) {
+    $errors = TRUE;
+    setcookie('BIRTHDATE_error', '1', time() + 24 * 60 * 60);
+}
+else{
+  setcookie('BIRTHDATE_value', $_POST['BIRTHDATE'], time() + 30 * 24 * 60 * 60);
+}
+
+if ($gender != 'male' && $gender != 'female') {
+    $errors = TRUE;
+    setcookie('GENDER_error', '1', time() + 24 * 60 * 60);
+}
+else{
+  setcookie('GENDER_value', $_POST['GENDER'], time() + 30 * 24 * 60 * 60);
+}
+
+if (empty($biografy)) {
+  $errors = TRUE;
+  setcookie('BIOGRAFY_error', '1', time() + 24 * 60 * 60);
+}
+else{
+setcookie('BIOGRAFY_value', $_POST['BIOGRAFY'], time() + 30 * 24 * 60 * 60);
+}
+if (empty($langs)) {
+  $errors = TRUE;
+  setcookie('Lang_Prog_error', '1', time() + 24 * 60 * 60);
+}
+else{
+setcookie('Lang_Prog_value', serialize($_POST['Lang_Prog']), time() + 30 * 24 * 60 * 60);
+}
+
+// Иначе, если запрос был методом POST, т.е. нужно проверить данные и сохранить их в XML-файл.
+if ($errors) {
+  // При наличии ошибок перезагружаем страницу и завершаем работу скрипта.
+  header('Location: index.php');
+  echo 'Найдена ошибка дружище)))';
+  exit();
+}
+else {
+  // Удаляем Cookies с признаками ошибок.
+  setcookie('FIO_error', '', 100000);
+  setcookie('PHONE_error', '', 100000);
+  setcookie('EMAIL_error', '', 100000);
+  setcookie('BIRTHDATE_error', '', 100000);
+  setcookie('GENDER_error', '', 100000);
+  setcookie('BIOGRAFY_error', '', 100000);
+  // TODO: тут необходимо удалить остальные Cookies.
+}
+try {
+    $conn = new PDO("mysql:host=localhost;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    echo "Connected successfully ";
+    $sql = "INSERT INTO REQUEST (FIO, PHONE, EMAIL, BIRTHDATE, GENDER, BIOGRAFY) VALUES (?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$fio, $phone, $email, $birthdate, $gender, $bio]);
+    $lastId = $conn->lastInsertId();
+    $Lang_selection = "SELECT Lang_ID FROM Lang_Prog WHERE Lang_NAME = ?";
+    $Lang_prepare = $conn->prepare($Lang_selection);
+    $Answer_insert = "INSERT INTO ANSWER (ID, Lang_ID) VALUES (?, ?)";
+    $Answer_prepare = $conn->prepare($Answer_insert);
+    foreach($_POST['Lang_Prog'] as $lang){
+        $Lang_prepare->execute([$lang]);
+        $lang_ID=$Lang_prepare->fetchColumn();
+        $Answer_prepare->execute([$lastId,$lang_ID]);
+    }
+    echo nl2br("\nNew record created successfully");
+} catch(PDOException $e) {
+    echo "Connection failed: " . $e->getMessage();
+}
+$conn = null;
+// Сохраняем куки с признаком успешного сохранения.
+setcookie('SAVE', '1');
+// Делаем перенаправление.
+header('Location: index.php');
+?>

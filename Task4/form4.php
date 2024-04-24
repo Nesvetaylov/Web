@@ -51,17 +51,17 @@
     <br>
     <label>
         <select class="lab" name="Lang_Prog[]" multiple="multiple">
-            <option value="1" <?php if (in_array('1', $values['selections'])) { print 'selected'; } ?>> Pascal</option>
-            <option value="2" <?php if (in_array('2', $values['selections'])) { print 'selected'; } ?>> C</option>
-            <option value="3" <?php if (in_array('3', $values['selections'])) { print 'selected'; } ?>> C++</option>
-            <option value="4" <?php if (in_array('4', $values['selections'])) { print 'selected'; } ?>> JavaScript</option>
-            <option value="5" <?php if (in_array('5', $values['selections'])) { print 'selected'; } ?>> PHP</option>
-            <option value="6" <?php if (in_array('6', $values['selections'])) { print 'selected'; } ?>> Python</option>
-            <option value="7" <?php if (in_array('7', $values['selections'])) { print 'selected'; } ?>> Java</option>
-            <option value="8" <?php if (in_array('8', $values['selections'])) { print 'selected'; } ?>> Haskel</option>
-            <option value="9" <?php if (in_array('9', $values['selections'])) { print 'selected'; } ?>> Clojure</option>
-            <option value="10" <?php if (in_array('10', $values['selections'])) { print 'selected'; } ?>> Prolog</option>
-            <option value="11" <?php if (in_array('11', $values['selections'])) { print 'selected'; } ?>> Scala</option>
+            <option value="1" <?php if (in_array('1', $values['Lang_Prog'])) { print 'selected'; } ?>> Pascal</option>
+            <option value="2" <?php if (in_array('2', $values['Lang_Prog'])) { print 'selected'; } ?>> C</option>
+            <option value="3" <?php if (in_array('3', $values['Lang_Prog'])) { print 'selected'; } ?>> C++</option>
+            <option value="4" <?php if (in_array('4', $values['Lang_Prog'])) { print 'selected'; } ?>> JavaScript</option>
+            <option value="5" <?php if (in_array('5', $values['Lang_Prog'])) { print 'selected'; } ?>> PHP</option>
+            <option value="6" <?php if (in_array('6', $values['Lang_Prog'])) { print 'selected'; } ?>> Python</option>
+            <option value="7" <?php if (in_array('7', $values['Lang_Prog'])) { print 'selected'; } ?>> Java</option>
+            <option value="8" <?php if (in_array('8', $values['Lang_Prog'])) { print 'selected'; } ?>> Haskel</option>
+            <option value="9" <?php if (in_array('9', $values['Lang_Prog'])) { print 'selected'; } ?>> Clojure</option>
+            <option value="10" <?php if (in_array('10', $values['Lang_Prog'])) { print 'selected'; } ?>> Prolog</option>
+            <option value="11" <?php if (in_array('11', $values['Lang_Prog'])) { print 'selected'; } ?>> Scala</option>
         </select>
     </label>
     <br>

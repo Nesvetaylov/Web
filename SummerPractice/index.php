@@ -20,17 +20,21 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
     //и, если это так, отображает сообщение об ошибке и удаляет соответствующую cookie. 
     if($errors['FIO_DOCTOR']) {
         setcookie('FIO_DOCTOR_error', '', time()-24*60*60);
+        setcookie('FIO_DOCTOR_error', '', time()-24*60*60);
         $messages[]='<div class="error">Заполните ФИО доктора</div>';
     }
     if($errors['SPECIALITY_DOCTOR']) {
+        setcookie('SPECIALITY_DOCTOR_error', '', time()-24*60*60);
         setcookie('SPECIALITY_DOCTOR_error', '', time()-24*60*60);
         $messages[]='<div class="error">Выберите специальность доктора</div>';
     }
     if($errors['COST_OF_ADMISSION']) {
         setcookie('COST_OF_ADMISSION_error', '', time()-24*60*60);
+        setcookie('COST_OF_ADMISSION_error', '', time()-24*60*60);
         $messages[]='<div class="error">Введите стоимость приёма</div>';
     }
     if($errors['PERCENTAGE_OF_SALARY']) {
+        setcookie('PERCENTAGE_OF_SALARY_error', '', time()-24*60*60);
         setcookie('PERCENTAGE_OF_SALARY_error', '', time()-24*60*60);
         $messages[]='<div class="error">Введите процент отчисления на зарплату</div>';
     }
@@ -65,7 +69,7 @@ $errors = FALSE;
 //(1) FIO check
 if (empty($_POST['FIO_DOCTOR']) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,50}$/u', $_POST['FIO_DOCTOR'])) {
     $errors = TRUE;
-    setcookie('FIO_DOCTOR_error', '1', time() + 24 * 60 * 60, "/");
+    setcookie('FIO_DOCTOR_error', '1', time() + 24 * 60 * 60);
 }
 else{
   setcookie('FIO_DOCTOR_value', $_POST['FIO_DOCTOR'], time() + 30 * 24 * 60 * 60);
@@ -73,7 +77,7 @@ else{
 //(2) SPECIALITY check
 if (empty($_POST['SPECIALITY_DOCTOR']) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,50}$/u', $_POST['SPECIALITY_DOCTOR'])) {
     $errors = TRUE;
-    setcookie('SPECIALITY_DOCTOR_error', '1', time() + 24 * 60 * 60, "/");
+    setcookie('SPECIALITY_DOCTOR_error', '1', time() + 24 * 60 * 60);
 }
 else{
   setcookie('SPECIALITY_DOCTOR_value', $_POST['SPECIALITY_DOCTOR'], time() + 30 * 24 * 60 * 60);
@@ -81,7 +85,7 @@ else{
 //(3) COST check
 if (empty($_POST['COST_OF_ADMISSION']) || !preg_match('/^\d{1,6}(\.\d{1,2})?$/', $_POST['COST_OF_ADMISSION'])) {
     $errors = TRUE;
-    setcookie('COST_OF_ADMISSION_error', '1', time() + 24 * 60 * 60, "/");
+    setcookie('COST_OF_ADMISSION_error', '1', time() + 24 * 60 * 60);
 } 
 else {
     setcookie('COST_OF_ADMISSION_value', $_POST['COST_OF_ADMISSION'], time() + 30 * 24 * 60 * 60);
@@ -89,7 +93,7 @@ else {
 //(4) PERCENTAGE check
 if (empty($_POST['PERCENTAGE_OF_SALARY']) || !preg_match('/^\d{1,3}$/', $_POST['PERCENTAGE_OF_SALARY'])) {
     $errors = TRUE;
-    setcookie('PERCENTAGE_OF_SALARY_error', '1', time() + 24 * 60 * 60, "/");
+    setcookie('PERCENTAGE_OF_SALARY_error', '1', time() + 24 * 60 * 60);
 } 
 else {
     setcookie('PERCENTAGE_OF_SALARY_value', $_POST['PERCENTAGE_OF_SALARY'], time() + 30 * 24 * 60 * 60);

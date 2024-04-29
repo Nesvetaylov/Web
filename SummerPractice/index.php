@@ -130,18 +130,4 @@ setcookie('SAVE', '1');
 setcookie('MAS', serialize($mas));
 // Делаем перенаправление.
 header('Location: index.php');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ?>

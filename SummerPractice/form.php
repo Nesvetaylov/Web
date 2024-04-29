@@ -1,5 +1,9 @@
 <html>
     <head>
+    <style>
+    .error {
+    border: 2px solid red;}
+    </style>
     <!-- <link rel="stylesheet" href="style.css"> -->
     <meta charset="utf-8">
     <title>Летняя практика</title>

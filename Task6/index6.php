@@ -1,17 +1,7 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8');
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-  $isStarted = session_start();
   $messages=array();
-  // Выдаем сообщения о различных ошибках
-  if (!empty($_COOKIE['DBERROR'])) {
-    $messages[] = $_COOKIE['DBERROR'] . '<br><br>';
-    setcookie('DBERROR', '', time() - 3600);
-  }
-  if (!empty($_COOKIE['AUTHERROR'])) {
-    $messages[] = $_COOKIE['AUTHERROR'] . '<br><br>';
-    setcookie('AUTHERROR', '', time() - 3600);
-  }
     // В суперглобальном массиве $_GET PHP хранит все параметры, переданные в текущем запросе через URL.
     if (!empty($_COOKIE['SAVE'])) {
       // Если есть параметр save, то выводим сообщение пользователю.
@@ -20,16 +10,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       setcookie('SAVE', '', 100000);
       setcookie('MAS', '', 100000);
     $messages[]='Спасибо, результаты сохранены.';
-     // Если в куках есть пароль, то выводим сообщение.
-     if (!empty($_COOKIE['pass'])) {
-      $messages[] = sprintf('Вы можете войти с логином <strong>%s</strong>
-        и паролем <strong>%s</strong> для изменения данных.<br>',
-        strip_tags($_COOKIE['login']),
-        strip_tags($_COOKIE['password']));
-    }
-    setcookie('save', '', time() - 3600);
-    setcookie('login', '', time() - 3600);
-    setcookie('password', '', time() - 3600);
     }
     // Включаем содержимое файла form.php
     $errors=array();
@@ -85,65 +65,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $values['GENDER'] = empty($_COOKIE['GENDER_value']) ? '' : $_COOKIE['GENDER_value'];
     $values['BIOGRAFY'] = empty($_COOKIE['BIOGRAFY_value']) ? '' : $_COOKIE['BIOGRAFY_value'];
     $values['Lang_Prog'] = empty($_COOKIE['Lang_Prog_value']) ? array() : unserialize($_COOKIE['Lang_Prog_value']);
-    include('form.php');
+    include('form4.php');
     // Завершаем работу скрипта.
     exit();
   }
-  //include("../Secret.php");
-
-
- // Если нет предыдущих ошибок ввода, есть кука сессии, начали сессию и
-// ранее в сессию записан факт успешного логина.
-if($isStarted && !empty($COOKIE[session_name()]) && !empty($_SESSION['Logged']) && $_SESSION['Logged']) {
   include("../Secret.php");
-  $servername='localhost';
-  $username = username;
-  $password = password;
-  $dbname = username;
-  $conn = new PDO("mysql:host=localhost;dbname=$dbname", $username, $password,
-  [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-  try {
-    $select="SELECT * FROM USERS WHERE login = ?";
-    $result = $db->prepare($select);
-    $result->execute([$_SESSION['login']]);
-    $row = $result->fetch();
-    // получаю значения формы из таблицы бд
-    $formID = $row['ID'];
-    $values['FIO'] = $row['FIO'];
-    $values['PHONE'] = $row['PHONE'];
-    $values['EMAIL'] = $row['EMAIL'];
-    $values['BIRTHDATE'] = $row['BIRTHDATE'];
-    $values['GENDER'] = $row['GENDER'];
-    $values['BIOGRAFY'] = $row['BIOGRAFY'];
-    // достаю выбранные языки программирования
-    $select = "SELECT Lang_ID FROM Lang_Prog WHERE ID = ?";
-    $result = $db->prepare($select);
-    $result->execute([$formID]);
-    $list = array();
-    while($row = $result->fetch()){
-      $list[] = $row['Lang_ID'];
-    }
-    $values['selections'] = $list;
-  }
-  catch(PDOException $e){
-    $messages[] = 'Ошибка при загрузке формы из базы данных:<br>' . $e->getMessage();
-  }
-  $messages[] = "Выполнен вход с логином: <strong>" . $_SESSION['login'] . '</strong><br>';
-  $messages[] = '<a href="login.php?exit=1">Выход</a>'; // вывод ссылки для выхода
-}
-// если не вошел, то вывести ссылку для входа
-elseif($isStarted && !empty($_COOKIE[session_name()])) {
-  $messages[] = '<a href="login.php">Войти</a> для изменения данных ранее отправленных форм<br>.';
-}
-include('form.php');
-
-
-
-
-
-//$username = username;
-//$password = password;
-//$dbname = username;
+$username = username;
+$password = password;
+$dbname = username;
 
 $fio = $phone = $email = $birthdate = $gender = '';
 $fio = $_POST['FIO'];
@@ -250,7 +179,6 @@ else {
   setcookie('Lang_Prog_error', '', 100000);
   // TODO: тут необходимо удалить остальные Cookies.
 }
-
 try {
     $conn = new PDO("mysql:host=localhost;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -278,11 +206,4 @@ setcookie('SAVE', '1');
 setcookie('MAS', serialize($mas));
 // Делаем перенаправление.
 header('Location: index.php');
-?>
-
-
-<!-- ГЕНЕРАЦИЯ РАНДОМНОГО ЛОГИНА И ПАРОЛЯ И ПОДКЛЮЧЕНИЕ К БД -->
-<?php
-//Подключение к БД
-
 ?>

@@ -7,7 +7,7 @@
 <!--     <link rel="stylesheet" href="style.css"> -->
     <meta charset="utf-8">
     <title>
-        <a 4 Задание>
+        <a 6 Задание>
         </a>
     </title>
 </head>

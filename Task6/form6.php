@@ -4,7 +4,7 @@
     .error {
     border: 2px solid red;}
     </style>
-    <link rel="stylesheet" href="style.css">
+<!--     <link rel="stylesheet" href="style.css"> -->
     <meta charset="utf-8">
     <title>
         <a 4 Задание>

@@ -7,8 +7,9 @@ body {
 .form-container {
     background-color: #ffffff;
     padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    border: 3px solid #a2a2a2;
+    /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
     max-width: 600px;
     margin: auto;
     margin-top: 50px;
@@ -44,7 +45,7 @@ body {
 }
 
 .button {
-    background-color: #4CAF50;
+    background-color: #0f5d75;
     color: #ffffff;
     padding: 10px 20px;
     border: none;
@@ -55,7 +56,7 @@ body {
 }
 
 .button:hover {
-    background-color: #45a049;
+    background-color: #26829e;
 }
 
 #messages {

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="style.css">
+    <title>Добавить врача</title>
+</head>
+
+<body>
+    <div class='form-container'>
+        <form action="index.php" method="POST">
+            <h2>Форма для заполнения информации о враче</h2>
+
+            <div class='form-section'>
+                <label for="FIO_DOCTOR">ФИО врача:</label>
+                <input type="text" class="form-control" name="FIO_DOCTOR">
+            </div>
+
+            <div class='form-section'>
+                <label for="SPECIALITY_DOCTOR">Специальность врача:</label>
+                <select class="form-control" id="SPECIALITY_DOCTOR" name="SPECIALITY_DOCTOR">
+                    <option value="Кардиолог">Кардиолог</option>
+                    <option value="Терапевт">Терапевт</option>
+                    <option value="Хирург">Хирург</option>
+                    <option value="Педиатр">Педиатр</option>
+                    <option value="Гинеколог">Гинеколог</option>
+                    <option value="Психиатр">Психиатр</option>
+                    <option value="Невролог">Невролог</option>
+                    <option value="Ортопед">Ортопед</option>
+                    <option value="Дерматолог">Дерматолог</option>
+                </select>
+            </div>
+
+            <div class="form-section">
+                <label for="COST_OF_ADMISSION">Стоимость приема:</label>
+                <input type="number" class="form-control" id="COST_OF_ADMISSION" name="COST_OF_ADMISSION">
+            </div>
+
+            <div class="form-section">
+                <label for="PERCENTAGE_OF_SALARY">Процент отчисления:</label>
+                <input type="number" class="form-control" id="PERCENTAGE_OF_SALARY" name="PERCENTAGE_OF_SALARY">
+            </div>
+
+            <button type="submit" class="button">Добавить врача</button>
+        </form>
+    </div>
+</body>
+
+</html>

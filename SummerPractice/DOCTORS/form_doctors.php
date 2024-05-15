@@ -6,7 +6,6 @@
         <?php 
             $v = rand();
             echo "<link rel='stylesheet' type='text/css' href='../style.css?v=$v' media='screen' />";
-            echo "<script>var selectedForm='$selectedForm'</script>"; 
         ?>
         <!-- <link rel="stylesheet" href="style.css" > -->
         <title>Добавить врача</title>

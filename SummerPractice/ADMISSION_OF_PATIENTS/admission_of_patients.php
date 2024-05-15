@@ -178,8 +178,7 @@ try {
     catch (PDOException $e) {
         $mas[]="Connection failed: " . $e->getMessage();
     }
-    $conn = null;
-    setcookie('SAVE', '1');
+  //setcookie('save', '1');
 }
 exit;
 ?>

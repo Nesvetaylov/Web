@@ -13,6 +13,18 @@
     </head>
 
     <body>
+    <?php
+      if (!empty($messages)) {
+        $errors = array();
+        $values = array();
+        print('<div id="messages">');
+        // Выводим все сообщения.
+        foreach ($messages as $message) {
+          print($message);
+        }
+        print('</div>');
+      }
+      ?>
         <div class='form-container'>
             <h2>Форма для заполнения информации о пациенте</h2> 
             <form action="patients.php" method="POST">
@@ -50,15 +62,5 @@
                 <button type="submit" class="button">Добавить пациента</button>
             </form>
         </div>
-        <?php
-      if (!empty($messages)) {
-        print('<div id="messages">');
-        // Выводим все сообщения.
-        foreach ($messages as $message) {
-          print($message);
-        }
-        print('</div>');
-      }
-      ?>
     </body>
 </html>

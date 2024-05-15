@@ -109,7 +109,7 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     $mas=array();
     if ($errors) {
         print('Ошибка');
-        header('Location: patients.php');
+        header('Location: admission_of_patients.php');
         exit();
     }
     else {

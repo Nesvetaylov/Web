@@ -55,30 +55,59 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
     exit();
 }
 elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $lastname = $_POST['LAST_NAME'];
+    $firstname = $_POST['FIRST_NAME'];
+    $middlename = $_POST['MIDDLE_NAME'];
+    $birthdate = $_POST['BIRTHDATE'];
+    $address = $_POST['ADDRESS'];
 
-    $lastname=$firstname=$middlename=$birthdate=$address='';
-    $lastname=$_POST['LAST_NAME'];
-    $firstname=$_POST['FIRST_NAME'];
-    $middlename=$_POST['MIDDLE_NAME'];
-    $birthdate=$_POST['BIRTHDATE'];
-    $address=$_POST['ADDRESS'];
+    $errors = validateInput($lastname, $firstname, $middlename, $birthdate, $address);
+    if ($errors) {
+        print('Ошибка');
+        header('Location: admission_of_patients.php');
+        exit();
+    }
 
+    try {
+        $conn = new PDO("mysql:host=localhost;dbname=$dbname", $username, $password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $sql = "INSERT INTO PATIENTS (LAST_NAME, FIRST_NAME, MIDDLE_NAME, BIRTHDATE, ADDRESS) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([$lastname, $firstname, $middlename, $birthdate, $address]);
+
+        $lastId = $conn->lastInsertId();
+        echo "Пациент успешно добавлен. ID нового пациента: $lastId";
+
+        // ...
+
+        $patient_id = getPatientId($conn, $lastname, $firstname, $middlename);
+        addAppointment($conn, $patient_id, $_POST["DOCTOR_ID"], $_POST["DATE"]);
+
+        setcookie('SAVE', '1');
+    } catch (PDOException $e) {
+        $errors['database'] = "Ошибка при добавлении врача: " . $e->getMessage();
+        echo "Ошибка при добавлении врача: " . $e->getMessage();
+    }
+}
+
+function validateInput($lastname, $firstname, $middlename, $birthdate, $address) {
     $errors = FALSE;
-    //(1) LAST_NAME CHECK
-    if (empty(trim($_POST['LAST_NAME'])) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,150}$/u', $_POST['LAST_NAME'])) {
+
+    // (1) LAST_NAME CHECK
+    if (empty(trim($lastname)) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,150}$/u', $lastname)) {
         $errors = TRUE;
         setcookie('LAST_NAME_error', '1', time() + 24 * 60 * 60);
+    } else {
+        setcookie('LAST_NAME_value', $lastname, time() + 30 * 24 * 60 * 60);
     }
-    else{
-        setcookie('LAST_NAME_value', $_POST['LAST_NAME'], time() + 30 * 24 * 60 * 60);
-    }
-    //(2) FIRST_NAME CHECK
-    if(empty($_POST['FIRST_NAME']) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,150}$/u', $_POST['FIRST_NAME'])){
+
+    // (2) FIRST_NAME CHECK
+    if (empty($firstname) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,150}$/u', $firstname)) {
         $errors = TRUE;
         setcookie('FIRST_NAME_error', '1', time() + 24 * 60 * 60);
-    }
-    else{
-        setcookie('FIRST_NAME_value', $_POST['FIRST_NAME'], time() + 30 * 24 * 60 * 60);
+    } else {
+        setcookie('FIRST_NAME_value', $firstname, time() + 30 * 24 * 60 * 60);
     }
     //(3) MIDDLE_NAME CHECK
     if(empty($_POST['MIDDLE_NAME']) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,150}$/u', $_POST['MIDDLE_NAME'])){
@@ -126,62 +155,23 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = password;
     $dbname = username;
 
-    try {
-        $conn = new PDO("mysql:host=localhost;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        echo "Connected successfully ";
-        $sql = "INSERT INTO PATIENTS (LAST_NAME, FIRST_NAME, MIDDLE_NAME, BIRTHDATE, ADDRESS ) VALUES (?, ?, ?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-    
-        $stmt->execute([$lastname, $firstname, $middlename, $birthdate, $address]);
-        echo "Пациент успешно добавлен.";
-        $lastId = $conn->lastInsertId();
-        echo "ID нового пациента: $lastId";
-        
-    }
-    catch(PDOException $e) {
-        $errors['database'] = "Ошибка при добавлении врача: " . $e->getMessage();
-        echo "Ошибка при добавлении врача: " . $e->getMessage();
-    }
-    setcookie('SAVE', '1');
+    return $errors;
+}
 
-
-    // Проверка на отправку формы
-try {
-    // Получение данных из формы
-    $lastName = $_POST["LAST_NAME"];
-    $firstName = $_POST["FIRST_NAME"];
-    $middleName = $_POST["MIDDLE_NAME"];
-    $birthDate = $_POST["BIRTHDATE"];
-    $address = $_POST["ADDRESS"];
-    $doctor_id = $_POST["DOCTOR_ID"];
-    $date = $_POST["DATE"];
-
-    
-    // Поиск ID пациента
+function getPatientId($conn, $lastname, $firstname, $middlename) {
     $sql = "SELECT PATIENT_ID FROM PATIENTS WHERE LAST_NAME = ? AND FIRST_NAME = ? AND MIDDLE_NAME = ?";
     $stmt = $conn->prepare($sql);
-    //$stmt->bind_param("sss", $lastName, $firstName, $middleName);
+    $stmt->execute([$lastname, $firstname, $middlename]);
 
-    $stmt->execute([$lastName, $firstName, $middleName]);
-   // $result = $stmt->get_result();
-    $patient_id = $stmt->fetch()["PATIENT_ID"];
-
-    // Добавление записи в таблицу Appointments
-    $sql = "INSERT INTO ADMISSION_OF_PATIENTS (PATIENT_ID, DOCTOR_ID, DATE) VALUES (?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    //$stmt->bind_param("iis", $patient_id, $doctor_id, $date);
-
-    $stmt->execute([$patient_id, $doctor_id, $date]);
-        echo "Запись на прием успешно добавлена.";
-    }
-    catch (PDOException $e) {
-        $errors['database'] = "Ошибка при добавлении: " . $e->getMessage();
-        echo "Ошибка при добавлении: " . $e->getMessage();
-    }
-  //setcookie('save', '1');
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result['PATIENT_ID'];
 }
-exit;
+
+function addAppointment($conn, $patient_id, $doctor_id, $date) {
+    $sql = "INSERT INTO APPOINTMENTS (PATIENT_ID, DOCTOR_ID, DATE) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$patient_id, $doctor_id, $date]);
+}
 ?>
 
 

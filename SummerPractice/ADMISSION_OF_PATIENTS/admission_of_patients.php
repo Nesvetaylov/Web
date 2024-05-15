@@ -178,7 +178,11 @@ try {
     catch (PDOException $e) {
         $mas[]="Connection failed: " . $e->getMessage();
     }
-  //setcookie('save', '1');
+    $conn = null;
+    setcookie('SAVE', '1');
+    
+    header("Location: admission_of_patients.php"); 
+    exit;
 }
 exit;
 ?>

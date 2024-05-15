@@ -180,9 +180,6 @@ try {
     }
     $conn = null;
     setcookie('SAVE', '1');
-    
-    header("Location: admission_of_patients.php"); 
-    exit;
 }
 exit;
 ?>

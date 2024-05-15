@@ -7,7 +7,6 @@
             $v = rand();
             echo "<link rel='stylesheet' type='text/css' href='../style.css?v=$v' media='screen' />";
         ?>
-        <!-- <link rel="stylesheet" href="style.css" > -->
         <title>Добавить врача</title>
         <style>
             .error {

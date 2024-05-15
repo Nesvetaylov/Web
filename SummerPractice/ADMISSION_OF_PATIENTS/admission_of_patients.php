@@ -110,7 +110,7 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($errors) {
         print('Ошибка');
         header('Location: admission_of_patients.php');
-        exit();
+        exit;
     }
     else {
         setcookie('LAST_NAME_error','',100000);

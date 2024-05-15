@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
     $values['LAST_NAME'] = empty($_COOKIE['LAST_NAME_value']) ? '' : $_COOKIE['LAST_NAME_value'];
     $values['FIRST_NAME'] = empty($_COOKIE['FIRST_NAME_value']) ? '' : $_COOKIE['FIRST_NAME_value'];
     $values['MIDDLE_NAME'] = empty($_COOKIE['MIDDLE_NAME_value']) ? '' : $_COOKIE['MIDDLE_NAME_value'];
-    $values['BIRTHDATE'] = empty($_COOKIE['BIRTHDATE']) ? '' : $_COOKIE['BIRTHDATE_value'];
+    $values['BIRTHDATE'] = empty($_COOKIE['BIRTHDATE_value']) ? '' : $_COOKIE['BIRTHDATE_value'];
     $values['ADDRESS'] = empty($_COOKIE['ADDRESS_value']) ? '' : $_COOKIE['ADDRESS_value'];
 
     include('form_patients.php');
@@ -128,12 +128,12 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dbname = username;
 
     try {
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        $conn = new PDO("mysql:host=localhost;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
+        echo "Connected successfully ";
         $sql = "INSERT INTO PATIENTS (LAST_NAME, FIRST_NAME, MIDDLE_NAME, BIRTHDATE, ADDRESS ) VALUES (?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-
+    
         $stmt->execute([$lastname, $firstname, $middlename, $birthdate, $address]);
         echo "Пациент успешно добавлен.";
         $lastId = $conn->lastInsertId();
@@ -145,7 +145,7 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $conn = null;
     setcookie('SAVE', '1');
-
+    
     header("Location: patients.php"); 
     exit;
 }

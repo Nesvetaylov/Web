@@ -158,7 +158,14 @@ try {
     $doctor_id = $_POST["DOCTOR_ID"];
     $date = $_POST["DATE"];
 
-
+    if (!empty($date)) {
+        $sql = "INSERT INTO ADMISSION_OF_PATIENTS (PATIENT_ID, DOCTOR_ID, DATE) VALUES (?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([$patient_id, $doctor_id, $date]);
+        echo "Запись на прием успешно добавлена.";
+    } else {
+        echo "Ошибка: дата не установлена.";
+    }
     // Поиск ID пациента
     $sql = "SELECT PATIENT_ID FROM PATIENTS WHERE LAST_NAME = ? AND FIRST_NAME = ? AND MIDDLE_NAME = ?";
     $stmt = $conn->prepare($sql);

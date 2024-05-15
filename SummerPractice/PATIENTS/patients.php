@@ -128,13 +128,13 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dbname = username;
 
     try {
-        $conn = new PDO("mysql:host=localhost;dbname=$dbname", $username, $password);
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        echo "Connected successfully ";
+
         $sql = "INSERT INTO PATIENTS (LAST_NAME, FIRST_NAME, MIDDLE_NAME, BIRTHDATE, ADDRESS ) VALUES (?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-    
-        $stmt->execute([$fio, $speciality, $cost, $percent]);
+
+        $stmt->execute([$lastname, $firstname, $middlename, $birthdate, $address]);
         echo "Пациент успешно добавлен.";
         $lastId = $conn->lastInsertId();
         echo "ID нового пациента: $lastId";
@@ -145,7 +145,7 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
     $conn = null;
     setcookie('SAVE', '1');
-    
+
     header("Location: patients.php"); 
     exit;
 }

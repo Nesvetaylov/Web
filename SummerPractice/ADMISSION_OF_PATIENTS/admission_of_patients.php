@@ -176,8 +176,7 @@ try {
         echo "Запись на прием успешно добавлена.";
     }
     catch (PDOException $e) {
-        $errors['database'] = "Ошибка при добавлении: " . $e->getMessage();
-        echo "Ошибка при добавлении: " . $e->getMessage();
+        $mas[]="Connection failed: " . $e->getMessage();
     }
   //setcookie('save', '1');
 }

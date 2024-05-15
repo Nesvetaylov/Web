@@ -1,5 +1,6 @@
 <?php
 // Конфигурация
+include('../Secret.php');
 const DB_HOST = 'localhost';
 const DB_USERNAME = 'username';
 const DB_PASSWORD = 'password';

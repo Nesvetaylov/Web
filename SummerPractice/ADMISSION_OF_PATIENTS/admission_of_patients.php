@@ -52,12 +52,12 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
 }
 elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $lastname=$firstname=$middlename=$birthdate=$address='';
-    $lastname=$_POST['LAST_NAME'];
-    $firstname=$_POST['FIRST_NAME'];
-    $middlename=$_POST['MIDDLE_NAME'];
-    $birthdate=$_POST['BIRTHDATE'];
-    $address=$_POST['ADDRESS'];
+    // $lastname=$firstname=$middlename=$birthdate=$address='';
+    // $lastname=$_POST['LAST_NAME'];
+    // $firstname=$_POST['FIRST_NAME'];
+    // $middlename=$_POST['MIDDLE_NAME'];
+    // $birthdate=$_POST['BIRTHDATE'];
+    // $address=$_POST['ADDRESS'];
 
     $errors = FALSE;
     //(1) LAST_NAME CHECK
@@ -147,38 +147,35 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     setcookie('SAVE', '1');
 
 
+    // Проверка на отправку формы
     try {
-        // Получение данных из формы
-        $lastname = $_POST['LAST_NAME'];
-        $firstname = $_POST['FIRST_NAME'];
-        $middlename = $_POST['MIDDLE_NAME'];
-        $birthdate = $_POST['BIRTHDATE'];
-        $address = $_POST['ADDRESS'];
-        $patient_id = $_POST["PATIENT_ID"];
-        $doctor_id = $_POST["DOCTOR_ID"];
-        $date = $_POST["DATE"];
+        // Validate user input
+        $lastname = filter_input(INPUT_POST, 'LAST_NAME', FILTER_SANITIZE_STRING);
+        $firstname = filter_input(INPUT_POST, 'FIRST_NAME', FILTER_SANITIZE_STRING);
+        $middlename = filter_input(INPUT_POST, 'MIDDLE_NAME', FILTER_SANITIZE_STRING);
+        $patient_id = filter_input(INPUT_POST, 'PATIENT_ID', FILTER_VALIDATE_INT);
+        $doctor_id = filter_input(INPUT_POST, 'DOCTOR_ID', FILTER_VALIDATE_INT);
+        $date = filter_input(INPUT_POST, 'DATE', FILTER_SANITIZE_STRING);
     
-        // Проверка на пустые значения
         if (empty($patient_id) || empty($doctor_id) || empty($date)) {
-            echo "Заполните все поля формы.";
-            exit;
+            throw new Exception('Please fill in all required fields');
         }
     
-        // Поиск ID пациента
-        $sql = "SELECT PATIENT_ID FROM PATIENTS WHERE LAST_NAME = ? AND FIRST_NAME = ? AND MIDDLE_NAME = ?";
+        // Find patient ID
+        $sql = "SELECT PATIENT_ID FROM PATIENTS WHERE LAST_NAME = :lastname AND FIRST_NAME = :firstname AND MIDDLE_NAME = :middlename";
         $stmt = $conn->prepare($sql);
-        $stmt->execute([$lastname, $firstname, $middlename]);
-        $patient_id = $stmt->fetch()["PATIENT_ID"];
+        $stmt->execute([':lastname' => $lastname, ':firstname' => $firstname, ':middlename' => $middlename]);
+        $patient_id = $stmt->fetch()['PATIENT_ID'];
     
-        // Добавление записи в таблицу ADMISSION_OF_PATIENTS
-        $sql = "INSERT INTO ADMISSION_OF_PATIENTS (PATIENT_ID, DOCTOR_ID, DATE) VALUES (?, ?, ?)";
+        // Insert into ADMISSION_OF_PATIENTS
+        $sql = "INSERT INTO ADMISSION_OF_PATIENTS (PATIENT_ID, DOCTOR_ID, DATE) VALUES (:patient_id, :doctor_id, :date)";
         $stmt = $conn->prepare($sql);
-        $stmt->execute([$patient_id, $doctor_id, $date]);
+        $stmt->execute([':patient_id' => $patient_id, ':doctor_id' => $doctor_id, ':date' => $date]);
     
-        echo "Запись на прием успешно добавлена.";
-    } catch (PDOException $e) {
-        $errors['database'] = "Ошибка при добавлении: " . $e->getMessage();
-        echo "Ошибка при добавлении: " . $e->getMessage();
+        echo "Record added successfully.";
+    } catch (Exception $e) {
+        error_log($e->getMessage());
+        echo "An error occurred: " . $e->getMessage();
     }
 }
 exit;

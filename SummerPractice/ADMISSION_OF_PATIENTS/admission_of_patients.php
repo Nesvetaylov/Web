@@ -147,17 +147,40 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     // Проверка на отправку формы
-try {
-    // Получение данных из формы
-    $lastName = $_POST["LAST_NAME"];
-    $firstName = $_POST["FIRST_NAME"];
-    $middleName = $_POST["MIDDLE_NAME"];
-    $birthDate = $_POST["BIRTHDATE"];
-    $address = $_POST["ADDRESS"];
-    $doctor_id = $_POST["DOCTOR_ID"];
-    $date = $_POST["DATE"];
-  //setcookie('save', '1');
-    }
+    try {
+        // Получение данных из формы
+        $lastName = $_POST['LAST_NAME'];
+        $firstName = $_POST['FIRST_NAME'];
+        $middleName = $_POST['MIDDLE_NAME'];
+        $birthDate = $_POST['BIRTHDATE'];
+        $address = $_POST['ADDRESS'];
+        $doctor_id = $_POST['DOCTOR_ID'];
+        $date = $_POST['DATE'];
+    
+    
+        // Поиск ID пациента
+        $sql = "SELECT PATIENT_ID FROM PATIENTS WHERE LAST_NAME = ? AND FIRST_NAME = ? AND MIDDLE_NAME = ?";
+        $stmt = $pdo->prepare($sql);
+        //$stmt->bind_param("sss", $lastName, $firstName, $middleName);
+    
+        $stmt->execute([$lastName, $firstName, $middleName]);
+       // $result = $stmt->get_result();
+        $patient_id = $stmt->fetch()["PatientID"];
+    
+        // Добавление записи в таблицу Appointments
+        $sql = "INSERT INTO ADMISSION_OF_PATIENTS (PATIENT_ID, DOCTOR_ID, DATE) VALUES (?, ?, ?)";
+        $stmt = $pdo->prepare($sql);
+        //$stmt->bind_param("iis", $patient_id, $doctor_id, $date);
+    
+        $stmt->execute([$patient_id, $doctor_id, $date]);
+            echo "Запись на прием успешно добавлена.";
+        }
+        catch (PDOException $e) {
+            $errors['database'] = "Ошибка при добавлении: " . $e->getMessage();
+            echo "Ошибка при добавлении: " . $e->getMessage();
+        }
+        //setcookie('save', '1'); 
+    
 }
 exit;
 ?>

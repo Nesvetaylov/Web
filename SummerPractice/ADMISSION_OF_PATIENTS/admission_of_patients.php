@@ -154,8 +154,6 @@ try {
     $middlename = $_POST["MIDDLE_NAME"];
     $birthdate = $_POST["BIRTHDATE"];
     $address = $_POST["ADDRESS"];
-    $doctor_id = $_POST["DOCTOR_ID"];
-    $date = $_POST["DATE"];
 
     
     // Поиск ID пациента

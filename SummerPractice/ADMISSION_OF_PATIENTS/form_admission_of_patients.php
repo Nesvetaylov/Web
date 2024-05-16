@@ -56,10 +56,6 @@
                     <input type="text" class="form-control" id="ADDRESS" name="ADDRESS" <?php if (($errors['ADDRESS'])) {print 'class="error"';} ?>
                     value="<?php if (isset($values['ADDRESS'])) {print $values['ADDRESS'];} ?>" />
                 </div>
-                
-                <div class="form-section">
-                    <input type="hidden" name="PATIENT_ID" value="">
-                </div>
 
                 <div class="form-section">
                     <label for="specialty">Выбрать врача:</label>

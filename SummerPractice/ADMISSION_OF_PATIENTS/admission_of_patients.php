@@ -1,8 +1,5 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8');
-header('Cache-Control: no-cache, must-revalidate');
-
-session_start(); // Начало сессии для хранения данных формы и сообщений об ошибках
 
 if ($_SERVER['REQUEST_METHOD']=='GET') {
     $messages=array();
@@ -52,22 +49,22 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
     $values['ADDRESS'] = empty($_COOKIE['ADDRESS_value']) ? '' : $_COOKIE['ADDRESS_value'];
 
     include('form_admission_of_patients.php');
-    exit();
 }
 elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $lastname=$firstname=$middlename=$birthdate=$address='';
-    $lastname=$_POST['LAST_NAME'];
-    $firstname=$_POST['FIRST_NAME'];
-    $middlename=$_POST['MIDDLE_NAME'];
-    $birthdate=$_POST['BIRTHDATE'];
-    $address=$_POST['ADDRESS'];
+    // $lastname=$firstname=$middlename=$birthdate=$address='';
+    // $lastname=$_POST['LAST_NAME'];
+    // $firstname=$_POST['FIRST_NAME'];
+    // $middlename=$_POST['MIDDLE_NAME'];
+    // $birthdate=$_POST['BIRTHDATE'];
+    // $address=$_POST['ADDRESS'];
 
     $errors = FALSE;
     //(1) LAST_NAME CHECK
     if (empty(trim($_POST['LAST_NAME'])) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,150}$/u', $_POST['LAST_NAME'])) {
         $errors = TRUE;
         setcookie('LAST_NAME_error', '1', time() + 24 * 60 * 60);
+        print('Необходимо заполнить фамилию'."\n");
     }
     else{
         setcookie('LAST_NAME_value', $_POST['LAST_NAME'], time() + 30 * 24 * 60 * 60);
@@ -76,6 +73,7 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     if(empty($_POST['FIRST_NAME']) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,150}$/u', $_POST['FIRST_NAME'])){
         $errors = TRUE;
         setcookie('FIRST_NAME_error', '1', time() + 24 * 60 * 60);
+        print('Необходимо заполнить имя'."\n");
     }
     else{
         setcookie('FIRST_NAME_value', $_POST['FIRST_NAME'], time() + 30 * 24 * 60 * 60);
@@ -84,6 +82,7 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     if(empty($_POST['MIDDLE_NAME']) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,150}$/u', $_POST['MIDDLE_NAME'])){
         $errors = TRUE;
         setcookie('MIDDLE_NAME_error', '1', time() + 24 * 60 * 60);
+        print('Необходимо заполнить отчество'."\n");
     }
     else{
         setcookie('MIDDLE_NAME_value', $_POST['MIDDLE_NAME'], time() + 30 * 24 * 60 * 60);
@@ -93,6 +92,7 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($dateObject === false || $dateObject->format('Y-m-d') !== $_POST['BIRTHDATE']) {
         $errors = TRUE;
         setcookie('BIRTHDATE_error', '1', time() + 24 * 60 * 60);
+        print ('Укажите дату рождения');
     }
     else{
         setcookie('BIRTHDATE_value', $_POST['BIRTHDATE'], time() + 30 * 24 * 60 * 60);
@@ -101,6 +101,7 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     if(empty($_POST['ADDRESS'])){
         $errors = TRUE;
         setcookie('ADDRESS_error', '1', time() + 24 * 60 * 60);
+        print('Укажите корректный адрес'."\n");
     }
     else{
         setcookie('ADDRESS_value', $_POST['ADDRESS'], time() + 30 * 24 * 60 * 60);
@@ -127,9 +128,9 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dbname = username;
 
     try {
-        $conn = new PDO("mysql:host=localhost;dbname=$dbname", $username, $password);
+        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        echo "Connected successfully ";
+        // echo "Connected successfully ";
         $sql = "INSERT INTO PATIENTS (LAST_NAME, FIRST_NAME, MIDDLE_NAME, BIRTHDATE, ADDRESS ) VALUES (?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
     
@@ -149,14 +150,24 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Проверка на отправку формы
 try {
     // Получение данных из формы
-    $lastName = $_POST["LAST_NAME"];
-    $firstName = $_POST["FIRST_NAME"];
-    $middleName = $_POST["MIDDLE_NAME"];
-    $birthDate = $_POST["BIRTHDATE"];
-    $address = $_POST["ADDRESS"];
+    $lastname=$firstname=$middlename=$birthdate=$address='';
+    $lastname=$_POST['LAST_NAME'];
+    $firstname=$_POST['FIRST_NAME'];
+    $middlename=$_POST['MIDDLE_NAME'];
+    $birthdate=$_POST['BIRTHDATE'];
+    $address=$_POST['ADDRESS'];
     $patient_id = $_POST["PATIENT_ID"];
     $doctor_id = $_POST["DOCTOR_ID"];
     $date = $_POST["DATE"];
+
+    // $lastname = $_POST["LAST_NAME"];
+    // $firstname = $_POST["FIRST_NAME"];
+    // $middleName = $_POST["MIDDLE_NAME"];
+    // $birthDate = $_POST["BIRTHDATE"];
+    // $address = $_POST["ADDRESS"];
+    // $patient_id = $_POST["PATIENT_ID"];
+    // $doctor_id = $_POST["DOCTOR_ID"];
+    // $date = $_POST["DATE"];
 
 
     // Поиск ID пациента
@@ -164,11 +175,11 @@ try {
     $stmt = $conn->prepare($sql);
     //$stmt->bind_param("sss", $lastName, $firstName, $middleName);
 
-    $stmt->execute([$lastName, $firstName, $middleName]);
+    $stmt->execute([$lastname, $firstname, $middlename]);
    // $result = $stmt->get_result();
     $patient_id = $stmt->fetch()["PATIENT_ID"];
 
-    // Добавление записи в таблицу Appointments
+    // Добавление записи в таблицу ADMISSION_OF_PATIENTS
     $sql = "INSERT INTO ADMISSION_OF_PATIENTS (PATIENT_ID, DOCTOR_ID, DATE) VALUES (?, ?, ?)";
     $stmt = $conn->prepare($sql);
     //$stmt->bind_param("iis", $patient_id, $doctor_id, $date);

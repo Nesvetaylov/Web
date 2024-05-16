@@ -150,8 +150,35 @@ function processForm($conn) {
     $doctor_id = filter_input(INPUT_POST, 'DOCTOR_ID', FILTER_VALIDATE_INT);
     $date = filter_input(INPUT_POST, 'DATE', FILTER_SANITIZE_STRING);
 
-    if (!$lastname || !$firstname || !$middlename || !$birthdate || !$address || !$patient_id || !$doctor_id || !$date) {
-        throw new Exception("Invalid input data");
+    $errors = [];
+
+    if (!$lastname) {
+        $errors[] = new Exception("Invalid last name", 1001);
+    }
+    if (!$firstname) {
+        $errors[] = new Exception("Invalid first name", 1002);
+    }
+    if (!$middlename) {
+        $errors[] = new Exception("Invalid middle name", 1003);
+    }
+    if (!$birthdate) {
+        $errors[] = new Exception("Invalid birthdate", 1004);
+    }
+    if (!$address) {
+        $errors[] = new Exception("Invalid address", 1005);
+    }
+    if (!$patient_id) {
+        $errors[] = new Exception("Invalid patient ID", 1006);
+    }
+    if (!$doctor_id) {
+        $errors[] = new Exception("Invalid doctor ID", 1007);
+    }
+    if (!$date) {
+        $errors[] = new Exception("Invalid date", 1008);
+    }
+
+    if (!empty($errors)) {
+        throw new Exception("Invalid input data", 1000, $errors);
     }
 
     // Insert patient data
@@ -194,8 +221,15 @@ function processForm($conn) {
 $conn = connectToDatabase($servername, $dbname, $username, $password);
 try {
     processForm($conn);
-} catch (Exception $e) {
-    echo "Ошибка: " . $e->getMessage();
+} 
+catch (Exception $e) {
+    if ($e->getCode() == 1000) {
+        foreach ($e->getPrevious() as $error) {
+            echo "Ошибка: " . $error->getMessage() . "<br>";
+        }
+    } else {
+        echo "Ошибка: " . $e->getMessage();
+    }
 }
 }
 exit;

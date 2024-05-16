@@ -178,7 +178,11 @@ function processForm($conn) {
     }
 
     if (!empty($errors)) {
-        throw new Exception("Invalid input data", 1000, $errors);
+        $exception = new Exception("Invalid input data", 1000);
+        foreach ($errors as $error) {
+            $exception->prepend($error);
+        }
+        throw $exception;
     }
 
     // Insert patient data

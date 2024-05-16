@@ -144,39 +144,6 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
         echo "Ошибка при добавлении врача: " . $e->getMessage();
     }
     setcookie('SAVE', '1');
-
-
-    // Проверка на отправку формы
-try {
-    // Получение данных из формы
-    $lastname = $_POST["LAST_NAME"];
-    $firstname = $_POST["FIRST_NAME"];
-    $middlename = $_POST["MIDDLE_NAME"];
-    $birthdate = $_POST["BIRTHDATE"];
-    $address = $_POST["ADDRESS"];
-
-    
-    // Поиск ID пациента
-    $sql = "SELECT PATIENT_ID FROM PATIENTS WHERE LAST_NAME = ? AND FIRST_NAME = ? AND MIDDLE_NAME = ?";
-    $stmt = $conn->prepare($sql);
-    //$stmt->bind_param("sss", $lastName, $firstName, $middleName);
-
-    $stmt->execute([$lastname, $firstname, $middlename]);
-   // $result = $stmt->get_result();
-    $patient_id = $stmt->fetch()["PATIENT_ID"];
-
-    // Добавление записи в таблицу Appointments
-    $sql = "INSERT INTO ADMISSION_OF_PATIENTS (PATIENT_ID, DOCTOR_ID, DATE) VALUES (?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    //$stmt->bind_param("iis", $patient_id, $doctor_id, $date);
-
-    $stmt->execute([$patient_id, $doctor_id, $date]);
-        echo "Запись на прием успешно добавлена.";
-    }
-    catch (PDOException $e) {
-        $mas[]="Connection failed: " . $e->getMessage();
-    }
-  //setcookie('save', '1');
 }
 exit;
 ?>

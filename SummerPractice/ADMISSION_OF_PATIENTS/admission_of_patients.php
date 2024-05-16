@@ -52,12 +52,12 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
 }
 elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    // $lastname=$firstname=$middlename=$birthdate=$address='';
-    // $lastname=$_POST['LAST_NAME'];
-    // $firstname=$_POST['FIRST_NAME'];
-    // $middlename=$_POST['MIDDLE_NAME'];
-    // $birthdate=$_POST['BIRTHDATE'];
-    // $address=$_POST['ADDRESS'];
+    $lastname=$firstname=$middlename=$birthdate=$address='';
+    $lastname=$_POST['LAST_NAME'];
+    $firstname=$_POST['FIRST_NAME'];
+    $middlename=$_POST['MIDDLE_NAME'];
+    $birthdate=$_POST['BIRTHDATE'];
+    $address=$_POST['ADDRESS'];
 
     $errors = FALSE;
     //(1) LAST_NAME CHECK

@@ -157,7 +157,7 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt = $conn->prepare($sql);
         //$stmt->bind_param("sss", $lastName, $firstName, $middleName);
     
-        $stmt->execute([$lastName, $firstName, $middleName]);
+        $stmt->execute([$lastname, $firstname, $middlename]);
        // $result = $stmt->get_result();
         $patient_id = $stmt->fetch()["PATIENT_ID"];
     

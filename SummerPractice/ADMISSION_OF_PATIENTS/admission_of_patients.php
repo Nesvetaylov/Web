@@ -128,58 +128,27 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dbname = username;
 
     try {
-        $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+        $conn = new PDO("mysql:host=localhost;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        // echo "Connected successfully ";
-        $sql = "INSERT INTO PATIENTS (LAST_NAME, FIRST_NAME, MIDDLE_NAME, BIRTHDATE, ADDRESS ) VALUES (?, ?, ?, ?, ?)";
+        echo "Connected successfully ";
+        $sql = "INSERT INTO DOCTORS (FIO_DOCTOR, SPECIALITY_DOCTOR, COST_OF_ADMISSION, PERCENTAGE_OF_SALARY) VALUES (?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
     
-        $stmt->execute([$lastname, $firstname, $middlename, $birthdate, $address]);
-        echo "Пациент успешно добавлен.";
+        $stmt->execute([$fio, $speciality, $cost, $percent]);
+        echo "Врач успешно добавлен.";
         $lastId = $conn->lastInsertId();
-        echo "ID нового пациента: $lastId";
+        echo "ID нового врача: $lastId";
         
     }
     catch(PDOException $e) {
-        $errors['database'] = "Ошибка при добавлении врача: " . $e->getMessage();
-        echo "Ошибка при добавлении врача: " . $e->getMessage();
+        $mas[]="Connection failed: " . $e->getMessage();
     }
+    $conn = null;
     setcookie('SAVE', '1');
-
-
-    // Проверка на отправку формы
-    try {
-        // Validate user input
-        $lastname = filter_input(INPUT_POST, 'LAST_NAME', FILTER_SANITIZE_STRING);
-        $firstname = filter_input(INPUT_POST, 'FIRST_NAME', FILTER_SANITIZE_STRING);
-        $middlename = filter_input(INPUT_POST, 'MIDDLE_NAME', FILTER_SANITIZE_STRING);
-        $patient_id = filter_input(INPUT_POST, 'PATIENT_ID', FILTER_VALIDATE_INT);
-        $doctor_id = filter_input(INPUT_POST, 'DOCTOR_ID', FILTER_VALIDATE_INT);
-        $date = filter_input(INPUT_POST, 'DATE', FILTER_SANITIZE_STRING);
     
-        if (empty($patient_id) || empty($doctor_id) || empty($date)) {
-            throw new Exception('Please fill in all required fields');
-        }
+    header("Location: admission_of_patients.php"); 
+    exit;
     
-        // Find patient ID
-    $sql = "SELECT PATIENT_ID FROM PATIENTS WHERE LAST_NAME = :lastname AND FIRST_NAME = :firstname AND MIDDLE_NAME = :middlename";
-    $stmt = $conn->prepare($sql);
-    $stmt->execute([':lastname' => $lastname, ':firstname' => $firstname, ':middlename' => $middlename]);
-    $patient_id = $stmt->fetch()['PATIENT_ID'];
-    
-        // Insert into PATIENTS
-    $stmt->execute([$lastname, $firstname, $middlename, $birthdate, $address]);
-    $patient_id = $conn->lastInsertId();
-    echo "Пациент успешно добавлен. ID нового пациента: $patient_id";
-    
-        echo "Record added successfully.";
-    } catch (Exception $e) {
-        error_log($e->getMessage());
-        echo "An error occurred: " . $e->getMessage();
-    }
 }
 exit;
 ?>
-
-
-

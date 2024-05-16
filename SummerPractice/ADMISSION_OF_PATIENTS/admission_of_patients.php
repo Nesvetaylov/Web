@@ -138,8 +138,8 @@ function connectToDatabase($servername, $dbname, $username, $password) {
     }
 }
 
-// Form processing function
-function processForm($conn) {
+  // Form processing function
+  function processForm($conn) {
     // Validate user input
     $lastname = filter_input(INPUT_POST, 'LAST_NAME', FILTER_SANITIZE_STRING);
     $firstname = filter_input(INPUT_POST, 'FIRST_NAME', FILTER_SANITIZE_STRING);
@@ -153,36 +153,32 @@ function processForm($conn) {
     $errors = [];
 
     if (!$lastname) {
-        $errors[] = new Exception("Invalid last name", 1001);
+        $errors[] = "Invalid last name";
     }
     if (!$firstname) {
-        $errors[] = new Exception("Invalid first name", 1002);
+        $errors[] = "Invalid first name";
     }
     if (!$middlename) {
-        $errors[] = new Exception("Invalid middle name", 1003);
+        $errors[] = "Invalid middle name";
     }
     if (!$birthdate) {
-        $errors[] = new Exception("Invalid birthdate", 1004);
+        $errors[] = "Invalid birthdate";
     }
     if (!$address) {
-        $errors[] = new Exception("Invalid address", 1005);
+        $errors[] = "Invalid address";
     }
     if (!$patient_id) {
-        $errors[] = new Exception("Invalid patient ID", 1006);
+        $errors[] = "Invalid patient ID";
     }
     if (!$doctor_id) {
-        $errors[] = new Exception("Invalid doctor ID", 1007);
+        $errors[] = "Invalid doctor ID";
     }
     if (!$date) {
-        $errors[] = new Exception("Invalid date", 1008);
+        $errors[] = "Invalid date";
     }
 
     if (!empty($errors)) {
-        $exception = new Exception("Invalid input data", 1000);
-        foreach ($errors as $error) {
-            $exception->prepend($error);
-        }
-        throw $exception;
+        throw new Exception("Invalid input data: " . implode(", ", $errors));
     }
 
     // Insert patient data
@@ -225,15 +221,8 @@ function processForm($conn) {
 $conn = connectToDatabase($servername, $dbname, $username, $password);
 try {
     processForm($conn);
-} 
-catch (Exception $e) {
-    if ($e->getCode() == 1000) {
-        foreach ($e->getPrevious() as $error) {
-            echo "Ошибка: " . $error->getMessage() . "<br>";
-        }
-    } else {
-        echo "Ошибка: " . $e->getMessage();
-    }
+} catch (Exception $e) {
+    echo "Ошибка: " . $e->getMessage();
 }
 }
 exit;

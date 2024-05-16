@@ -137,7 +137,7 @@ function connectToDatabase($servername, $dbname, $username, $password) {
         throw new Exception("Database connection error: " . $e->getMessage());
     }
 }
-
+    $date = date('Y-m-d H:i:s');
   // Form processing function
   function processForm($conn) {
     // Validate user input

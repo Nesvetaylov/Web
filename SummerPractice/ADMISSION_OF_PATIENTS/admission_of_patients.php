@@ -157,6 +157,7 @@ try {
     $doctor_id = $_POST["DOCTOR_ID"];
     $date = $_POST["DATE"];
   //setcookie('save', '1');
+    }
 }
 exit;
 ?>

@@ -147,51 +147,39 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     setcookie('SAVE', '1');
 
 
-    // Проверка на отправку формы
-try {
-    // Получение данных из формы
-    $lastname=$firstname=$middlename=$birthdate=$address='';
-    $lastname=$_POST['LAST_NAME'];
-    $firstname=$_POST['FIRST_NAME'];
-    $middlename=$_POST['MIDDLE_NAME'];
-    $birthdate=$_POST['BIRTHDATE'];
-    $address=$_POST['ADDRESS'];
-    $patient_id = $_POST["PATIENT_ID"];
-    $doctor_id = $_POST["DOCTOR_ID"];
-    $date = $_POST["DATE"];
-
-    // $lastname = $_POST["LAST_NAME"];
-    // $firstname = $_POST["FIRST_NAME"];
-    // $middleName = $_POST["MIDDLE_NAME"];
-    // $birthDate = $_POST["BIRTHDATE"];
-    // $address = $_POST["ADDRESS"];
-    // $patient_id = $_POST["PATIENT_ID"];
-    // $doctor_id = $_POST["DOCTOR_ID"];
-    // $date = $_POST["DATE"];
-
-
-    // Поиск ID пациента
-    $sql = "SELECT PATIENT_ID FROM PATIENTS WHERE LAST_NAME = ? AND FIRST_NAME = ? AND MIDDLE_NAME = ?";
-    $stmt = $conn->prepare($sql);
-    //$stmt->bind_param("sss", $lastName, $firstName, $middleName);
-
-    $stmt->execute([$lastname, $firstname, $middlename]);
-   // $result = $stmt->get_result();
-    $patient_id = $stmt->fetch()["PATIENT_ID"];
-
-    // Добавление записи в таблицу ADMISSION_OF_PATIENTS
-    $sql = "INSERT INTO ADMISSION_OF_PATIENTS (PATIENT_ID, DOCTOR_ID, DATE) VALUES (?, ?, ?)";
-    $stmt = $conn->prepare($sql);
-    //$stmt->bind_param("iis", $patient_id, $doctor_id, $date);
-
-    $stmt->execute([$patient_id, $doctor_id, $date]);
+    try {
+        // Получение данных из формы
+        $lastname = $_POST['LAST_NAME'];
+        $firstname = $_POST['FIRST_NAME'];
+        $middlename = $_POST['MIDDLE_NAME'];
+        $birthdate = $_POST['BIRTHDATE'];
+        $address = $_POST['ADDRESS'];
+        $patient_id = $_POST["PATIENT_ID"];
+        $doctor_id = $_POST["DOCTOR_ID"];
+        $date = $_POST["DATE"];
+    
+        // Проверка на пустые значения
+        if (empty($patient_id) || empty($doctor_id) || empty($date)) {
+            echo "Заполните все поля формы.";
+            exit;
+        }
+    
+        // Поиск ID пациента
+        $sql = "SELECT PATIENT_ID FROM PATIENTS WHERE LAST_NAME = ? AND FIRST_NAME = ? AND MIDDLE_NAME = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([$lastname, $firstname, $middlename]);
+        $patient_id = $stmt->fetch()["PATIENT_ID"];
+    
+        // Добавление записи в таблицу ADMISSION_OF_PATIENTS
+        $sql = "INSERT INTO ADMISSION_OF_PATIENTS (PATIENT_ID, DOCTOR_ID, DATE) VALUES (?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([$patient_id, $doctor_id, $date]);
+    
         echo "Запись на прием успешно добавлена.";
-    }
-    catch (PDOException $e) {
+    } catch (PDOException $e) {
         $errors['database'] = "Ошибка при добавлении: " . $e->getMessage();
         echo "Ошибка при добавлении: " . $e->getMessage();
     }
-  //setcookie('save', '1');
 }
 exit;
 ?>

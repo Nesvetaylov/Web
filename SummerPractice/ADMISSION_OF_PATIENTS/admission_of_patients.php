@@ -162,15 +162,15 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
         }
     
         // Find patient ID
-        $sql = "SELECT PATIENT_ID FROM PATIENTS WHERE LAST_NAME = :lastname AND FIRST_NAME = :firstname AND MIDDLE_NAME = :middlename";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([':lastname' => $lastname, ':firstname' => $firstname, ':middlename' => $middlename]);
-        $patient_id = $stmt->fetch()['PATIENT_ID'];
+    $sql = "SELECT PATIENT_ID FROM PATIENTS WHERE LAST_NAME = :lastname AND FIRST_NAME = :firstname AND MIDDLE_NAME = :middlename";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([':lastname' => $lastname, ':firstname' => $firstname, ':middlename' => $middlename]);
+    $patient_id = $stmt->fetch()['PATIENT_ID'];
     
-        // Insert into ADMISSION_OF_PATIENTS
-        $sql = "INSERT INTO ADMISSION_OF_PATIENTS (PATIENT_ID, DOCTOR_ID, DATE) VALUES (:patient_id, :doctor_id, :date)";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([':patient_id' => $patient_id, ':doctor_id' => $doctor_id, ':date' => $date]);
+        // Insert into PATIENTS
+    $stmt->execute([$lastname, $firstname, $middlename, $birthdate, $address]);
+    $patient_id = $conn->lastInsertId();
+    echo "Пациент успешно добавлен. ID нового пациента: $patient_id";
     
         echo "Record added successfully.";
     } catch (Exception $e) {

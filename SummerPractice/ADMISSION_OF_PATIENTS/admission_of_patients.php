@@ -168,9 +168,7 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sql = "SELECT PATIENT_ID FROM PATIENTS WHERE LAST_NAME = ? AND FIRST_NAME = ? AND MIDDLE_NAME = ?";
         $stmt = $conn->prepare($sql);
         $stmt->execute([$lastName, $firstName, $middleName]);
-        $result = $stmt->fetch();
-    
-        // Проверка результата выполнения запроса
+        $result = $stmt->fetch();// Проверка результата выполнения запроса
         if ($result === false) {
             throw new Exception("Не найден пациент с указанными фамилией, именем и отчеством.");
         }

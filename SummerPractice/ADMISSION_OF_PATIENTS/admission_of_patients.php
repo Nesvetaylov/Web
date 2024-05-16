@@ -147,56 +147,40 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     // Проверка на отправку формы
-    try {
-        // Проверка наличия данных в массиве $_POST
-        if (!isset($_POST["LAST_NAME"]) || !isset($_POST["FIRST_NAME"]) || !isset($_POST["MIDDLE_NAME"]) ||
-            !isset($_POST["BIRTHDATE"]) || !isset($_POST["ADDRESS"]) || !isset($_POST["PATIENT_ID"]) ||
-            !isset($_POST["DOCTOR_ID"]) || !isset($_POST["DATE"])) {
-            throw new Exception("Не все данные получены из формы.");
-        }
-    
-        $lastName = $_POST["LAST_NAME"];
-        $firstName = $_POST["FIRST_NAME"];
-        $middleName = $_POST["MIDDLE_NAME"];
-        $birthDate = $_POST["BIRTHDATE"];
-        $address = $_POST["ADDRESS"];
-        $patient_id = $_POST["PATIENT_ID"];
-        $doctor_id = $_POST["DOCTOR_ID"];
-        $date = $_POST["DATE"];
-    
-        // Поиск ID пациента
-        $sql = "SELECT PATIENT_ID FROM PATIENTS WHERE LAST_NAME = ? AND FIRST_NAME = ? AND MIDDLE_NAME = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([$lastName, $firstName, $middleName]);
-        $result = $stmt->fetch();// Проверка результата выполнения запроса
-        if ($result === false) {
-            throw new Exception("Не найден пациент с указанными фамилией, именем и отчеством.");
-        }
-    
-        $patient_id = $result["PATIENT_ID"];
-    
-        // Проверка уникальности пары "пациент - врач"
-        $sql = "SELECT COUNT(*) FROM ADMISSION_OF_PATIENTS WHERE PATIENT_ID = ? AND DOCTOR_ID = ? AND DATE = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([$patient_id, $doctor_id, $date]);
-        $count = $stmt->fetchColumn();
-    
-        if ($count > 0) {
-            throw new Exception("Уже существует запись на прием с указанной парой 'пациент - врач' на указанную дату.");
-        }
-    
-        // Добавление записи в таблицу Appointments
-        $sql = "INSERT INTO ADMISSION_OF_PATIENTS (PATIENT_ID, DOCTOR_ID, DATE) VALUES (?, ?, ?)";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([$patient_id, $doctor_id, $date]);
-    
+try {
+    // Получение данных из формы
+    $lastName = $_POST["LAST_NAME"];
+    $firstName = $_POST["FIRST_NAME"];
+    $middleName = $_POST["MIDDLE_NAME"];
+    $birthDate = $_POST["BIRTHDATE"];
+    $address = $_POST["ADDRESS"];
+    $patient_id = $_POST["PATIENT_ID"];
+    $doctor_id = $_POST["DOCTOR_ID"];
+    $date = $_POST["DATE"];
+
+
+    // Поиск ID пациента
+    $sql = "SELECT PATIENT_ID FROM PATIENTS WHERE LAST_NAME = ? AND FIRST_NAME = ? AND MIDDLE_NAME = ?";
+    $stmt = $conn->prepare($sql);
+    //$stmt->bind_param("sss", $lastName, $firstName, $middleName);
+
+    $stmt->execute([$lastName, $firstName, $middleName]);
+   // $result = $stmt->get_result();
+    $patient_id = $stmt->fetch()["PATIENT_ID"];
+
+    // Добавление записи в таблицу Appointments
+    $sql = "INSERT INTO ADMISSION_OF_PATIENTS (PATIENT_ID, DOCTOR_ID, DATE) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    //$stmt->bind_param("iis", $patient_id, $doctor_id, $date);
+
+    $stmt->execute([$patient_id, $doctor_id, $date]);
         echo "Запись на прием успешно добавлена.";
-    } catch (PDOException $e) {
+    }
+    catch (PDOException $e) {
         $errors['database'] = "Ошибка при добавлении: " . $e->getMessage();
         echo "Ошибка при добавлении: " . $e->getMessage();
-    } catch (Exception $e) {
-        echo "Ошибка: " . $e->getMessage();
     }
+  //setcookie('save', '1');
 }
 exit;
 ?>

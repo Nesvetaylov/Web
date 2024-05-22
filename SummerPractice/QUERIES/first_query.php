@@ -15,7 +15,7 @@ try {
     $stmt = $conn->query($query);
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    echo '<table>';
+    echo '<table class="doctors-table">';
     echo '<tr>';
     echo "<td>Номер доктора</td>";
     echo "<td>ФИО доктора</td>";

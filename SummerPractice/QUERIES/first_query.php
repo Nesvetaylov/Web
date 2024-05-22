@@ -12,7 +12,7 @@ try {
         $password,
         [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
-    $query = select * from DOCTORS where SPECIALITY_DOCTOR='Хирург';
+    $query = "select * from DOCTORS where SPECIALITY_DOCTOR='Хирург';";
     $stmt = $db->query($query);
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
     $values['LAST_NAME'] = empty($_COOKIE['LAST_NAME_value']) ? '' : $_COOKIE['LAST_NAME_value'];
     $values['FIRST_NAME'] = empty($_COOKIE['FIRST_NAME_value']) ? '' : $_COOKIE['FIRST_NAME_value'];
     $values['MIDDLE_NAME'] = empty($_COOKIE['MIDDLE_NAME_value']) ? '' : $_COOKIE['MIDDLE_NAME_value'];
-    $values['BIRTHDATE'] = empty($_COOKIE['BIRTHDATE']) ? '' : $_COOKIE['BIRTHDATE_value'];
+    $values['DATE'] = empty($_COOKIE['BIRTHDATE']) ? '' : $_COOKIE['BIRTHDATE_value'];
     $values['ADDRESS'] = empty($_COOKIE['ADDRESS_value']) ? '' : $_COOKIE['ADDRESS_value'];
 
     include('form_admission_of_patients.php');
@@ -56,7 +56,7 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     $lastname=$_POST['LAST_NAME'];
     $firstname=$_POST['FIRST_NAME'];
     $middlename=$_POST['MIDDLE_NAME'];
-    $birthdate=$_POST['BIRTHDATE'];
+    $birthdate=$_POST['DATE'];
     $address=$_POST['ADDRESS'];
 
     $errors = FALSE;

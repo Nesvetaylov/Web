@@ -11,7 +11,11 @@ try {
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($results as $row) {
-        echo implode(", ", $row) . "\n";
+        echo "DOCTOR_ID: " . $row['DOCTOR_ID'] . "\n";
+        echo "FIO_DOCTOR: " . $row['FIO_DOCTOR'] . "\n";
+        echo "SPECIALITY_DOCTOR: " . $row['SPECIALITY_DOCTOR'] . "\n";
+        echo "COST_OF_ADMISSION: " . $row['COST_OF_ADMISSION'] . "\n";
+        echo "PERCENTAGE_OF_SALARY: " . $row['PERCENTAGE_OF_SALARY'] . "\n\n";
     }
 } catch (PDOException $e) {
     echo "Ошибка: " . $e->getMessage();

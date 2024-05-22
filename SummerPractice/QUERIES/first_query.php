@@ -13,7 +13,7 @@ try {
         [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
     $query = "select * from DOCTORS where SPECIALITY_DOCTOR='Хирург';";
-    $stmt = $db->query($query);
+    $stmt = $conn->query($query);
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     echo json_encode($results);

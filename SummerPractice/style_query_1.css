@@ -1,20 +1,20 @@
-.doctors-table {
+.table {
     width: 500px;
     margin: 0 auto;
     border-collapse: collapse;
 }
 
-.doctors-table th,
-.doctors-table td {
+.table th,
+.table td {
     border: 1px solid black;
     padding: 8px;
     text-align: center;
 }
 
-.doctors-table th {
+.table th {
     background-color: #f2f2f2;
 }
 
-.doctors-table tr:nth-child(even) {
+.table tr:nth-child(even) {
     background-color: #f2f2f2;
 }

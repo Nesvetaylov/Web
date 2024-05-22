@@ -13,15 +13,13 @@ try {
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     echo '<table>';
-    foreach ($results as $row) {
-        echo '<tr>';
-        echo "<td>Номер доктора</td>";
-        echo "<td>ФИО доктора</td>";
-        echo "<td>Специальность</td>";
-        echo "<td>Стоимость приёма</td>";
-        echo "<td>Процент отчисления</td>";
-        echo '</tr>';
-    }
+    echo '<tr>';
+    echo "<td>Номер доктора</td>";
+    echo "<td>ФИО доктора</td>";
+    echo "<td>Специальность</td>";
+    echo "<td>Стоимость приёма</td>";
+    echo "<td>Процент отчисления</td>";
+    echo '</tr>';
     foreach ($results as $row) {
         echo '<tr>';
         echo "<td>" . $row['DOCTOR_ID'] . "</td>";

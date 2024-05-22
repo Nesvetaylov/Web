@@ -1,19 +1,45 @@
-.table {
+.doctors-table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.table th,
-.table td {
+.doctors-table th,
+.doctors-table td {
     border: 1px solid black;
     padding: 8px;
     text-align: left;
 }
 
-.table th {
+.doctors-table th {
     background-color: #f2f2f2;
 }
 
-.table tr:nth-child(even) {
+.doctors-table tr:nth-child(even) {
     background-color: #f2f2f2;
+}
+
+.doctors-table th:first-child,
+.doctors-table td:first-child {
+    border-left: none;
+}
+
+.doctors-table th:last-child,
+.doctors-table td:last-child {
+    border-right: none;
+}
+
+.doctors-table th {
+    font-weight: bold;
+}
+
+.doctors-table td {
+    font-weight: normal;
+}
+
+.doctors-table tr:hover {
+    background-color: #ddd;
+}
+
+.doctors-table td:empty {
+    background-color: #ff0;
 }

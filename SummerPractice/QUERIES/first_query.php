@@ -11,11 +11,11 @@ try {
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($results as $row) {
-        echo "DOCTOR_ID: " . $row['DOCTOR_ID'] . "<br>";
-        echo "FIO_DOCTOR: " . $row['FIO_DOCTOR'] . "<br>";
-        echo "SPECIALITY_DOCTOR: " . $row['SPECIALITY_DOCTOR'] . "<br>";
-        echo "COST_OF_ADMISSION: " . $row['COST_OF_ADMISSION'] . "<br>";
-        echo "PERCENTAGE_OF_SALARY: " . $row['PERCENTAGE_OF_SALARY'] . "<br>";
+        echo "Номер доктора: " . $row['DOCTOR_ID'] . "<br>";
+        echo "ФИО доктора: " . $row['FIO_DOCTOR'] . "<br>";
+        echo "Специальность: " . $row['SPECIALITY_DOCTOR'] . "<br>";
+        echo "Стоимость приёма: " . $row['COST_OF_ADMISSION'] . "<br>";
+        echo "Процент отчисления: " . $row['PERCENTAGE_OF_SALARY'] . "<br><br><br>";
     }
 } catch (PDOException $e) {
     echo "Ошибка: " . $e->getMessage();

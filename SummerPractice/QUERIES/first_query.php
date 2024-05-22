@@ -1,5 +1,9 @@
 <?php
 
+$v = rand();
+echo "<link rel='stylesheet' type='text/css' href='../style_query_1.css?v=$v' media='screen' />";
+echo "<script>var selectedForm='$selectedForm'</script>"; 
+
 include("../Secret.php");
 $username = username;
 $password = password;

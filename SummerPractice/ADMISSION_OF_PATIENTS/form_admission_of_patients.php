@@ -47,7 +47,7 @@
 
                 <div class="form-section">
                     <label for="DATE">Дата рождения:</label>
-                    <input type="date" class="form-control" id="DATE" name="DATE" <?php if (($errors['DATE'])) {print 'class="error"';} ?>
+                    <input type="date" class="form-control" id="DATE" name="DATE" <?php if (($errors['BIRTHDATE'])) {print 'class="error"';} ?>
                     value="<?php if (isset($values['DATE'])) {print $values['DATE'];} ?>" />
                 </div>
 

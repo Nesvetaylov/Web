@@ -1,24 +1,24 @@
 <?php
+header('Content-Type: application/json; charset=UTF-8');
 
 include("../Secret.php");
 $username = username;
 $password = password;
-$opt = $_POST['options'];
 
-if ($opt=="1") {
-    // текст SQL запроса, который будет передан базе
-    $query = "select * from DOCTORS where SPECIALITY_DOCTOR='Хирург';"
-    
-     // выполняем запрос к базе данных
-     $results = mysqli_query($connection, $query);
+try {
+    $conn = new PDO(
+        "mysql:host=localhost;dbname=$username",
+        $username,
+        $password,
+        [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+    );
+    $query = "select * from DOCTORS where SPECIALITY_DOCTOR='Хирург';";
+    $stmt = $conn->query($query);
+    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
- 
-    // выводим полученные данные
-    while($row = $results->fetch_assoc()){
-      echo  $row['FIO_DOCTOR'] . ' - ' . $row['SPECIALITY_DOCTOR'] . ' - ' . $row['COST_OF_ADMISSION'] . ' - ' . $row['PERCENTAGE_OF_SALARY'] . "<br>";
-    }
-  }
-catch (PDOException $e) {
+    echo json_encode($results);
+} catch (PDOException $e) {
     echo "Ошибка: " . $e->getMessage();
     die();
 }
+?>

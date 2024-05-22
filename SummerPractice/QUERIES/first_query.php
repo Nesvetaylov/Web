@@ -10,12 +10,9 @@ try {
     $stmt = $conn->query($query);
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $output = "";
     foreach ($results as $row) {
-        $output .= print_r($row, true) . "\n";
+        echo implode(", ", $row) . "\n";
     }
-
-    echo $output;
 } catch (PDOException $e) {
     echo "Ошибка: " . $e->getMessage();
     die();

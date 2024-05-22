@@ -4,6 +4,8 @@ include("../Secret.php");
 $username = username;
 $password = password;
 
+// Запрос 1: Выбирает из таблицы ВРАЧИ информацию о врачах, имеющих конкретную специальность (например, хирург)
+echo "<h2>Запрос 1: Выбирает из таблицы ВРАЧИ информацию о врачах, имеющих конкретную специальность (например, хирург)</h2>";
 try {
     $conn = new PDO( "mysql:host=localhost;dbname=$username", $username, $password, [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION] );
     $query = "select * from DOCTORS where SPECIALITY_DOCTOR='Хирург';";

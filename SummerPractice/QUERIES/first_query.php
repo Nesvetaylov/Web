@@ -13,12 +13,24 @@ try {
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     foreach ($results as $row) {
-        echo "Номер доктора: " . $row['DOCTOR_ID'] . "<br>";
-        echo "ФИО доктора: " . $row['FIO_DOCTOR'] . "<br>";
-        echo "Специальность: " . $row['SPECIALITY_DOCTOR'] . "<br>";
-        echo "Стоимость приёма: " . $row['COST_OF_ADMISSION'] . "<br>";
-        echo "Процент отчисления: " . $row['PERCENTAGE_OF_SALARY'] . "<br><br><br>";
+        echo '<tr>';
+        echo "<td>Номер доктора</td>";
+        echo "<td>ФИО доктора</td>";
+        echo "<td>Специальность</td>";
+        echo "<td>Стоимость приёма</td>";
+        echo "<td>Процент отчисления</td>";
+        echo '</tr>';
     }
+    foreach ($results as $row) {
+        echo '<tr>';
+        echo "<td>" . $row['DOCTOR_ID'] . "</td>";
+        echo "<td>" . $row['FIO_DOCTOR'] . "</td>";
+        echo "<td>" . $row['SPECIALITY_DOCTOR'] . "</td>";
+        echo "<td>" . $row['COST_OF_ADMISSION'] . "</td>";
+        echo "<td>" . $row['PERCENTAGE_OF_SALARY'] . "</td>";
+        echo '</tr>';
+    }
+
 } catch (PDOException $e) {
     echo "Ошибка: " . $e->getMessage();
     die();

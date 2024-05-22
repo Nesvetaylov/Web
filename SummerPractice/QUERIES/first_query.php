@@ -10,11 +10,11 @@ if ($opt=="1") {
     $query = "select * from DOCTORS where SPECIALITY_DOCTOR='Хирург';"
     
      // выполняем запрос к базе данных
-     $stmt = $conn->query($query);
-     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+     $results = mysqli_query($connection, $query);
+
  
     // выводим полученные данные
-    while($row = $result->fetch_assoc()){
+    while($row = $results->fetch_assoc()){
       echo  $row['FIO_DOCTOR'] . ' - ' . $row['SPECIALITY_DOCTOR'] . ' - ' . $row['COST_OF_ADMISSION'] . ' - ' . $row['PERCENTAGE_OF_SALARY'] . "<br>";
     }
   }

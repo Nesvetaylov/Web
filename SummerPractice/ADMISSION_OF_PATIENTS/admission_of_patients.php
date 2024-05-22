@@ -137,12 +137,11 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sql = "INSERT INTO PATIENTS (LAST_NAME,FIRST_NAME, MIDDLE_NAME, BIRTHDATE, ADDRESS) VALUES (:lastname, :firstname, :middlename, :birthdate, :address)";
         $stmt = $pdo->prepare($sql);
 
-        $stmt->bindParam(':lastname', $_POST['lastname']);
-        $stmt->bindParam(':firstname', $_POST['firstname']);
-        $stmt->bindParam(':middlename', $_POST['middlename']);
-        $stmt->bindParam(':birthdate', $_POST['birthdate']);
-        $stmt->bindParam(':address', $_POST['address']);
-
+        $stmt->bindParam(':lastname', $_POST['LAST_NAME']);
+        $stmt->bindParam(':firstname', $_POST['FIRST_NAME']);
+        $stmt->bindParam(':middlename', $_POST['MIDDLE_NAME']);
+        $stmt->bindParam(':birthdate', $_POST['BIRTHDATE']);
+        $stmt->bindParam(':address', $_POST['ADDRESS']);
         $stmt->execute();
         echo "Пациент успешно добавлен.";
         $lastId = $pdo->lastInsertId();

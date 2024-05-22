@@ -12,6 +12,7 @@ try {
     $stmt = $conn->query($query);
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
+    echo '<table>';
     foreach ($results as $row) {
         echo '<tr>';
         echo "<td>Номер доктора</td>";
@@ -30,6 +31,7 @@ try {
         echo "<td>" . $row['PERCENTAGE_OF_SALARY'] . "</td>";
         echo '</tr>';
     }
+    echo '</table>';
 
 } catch (PDOException $e) {
     echo "Ошибка: " . $e->getMessage();

@@ -16,12 +16,7 @@ try {
     $stmt = $conn->query($query);
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    $json_string = json_encode($results, JSON_UNESCAPED_UNICODE);
-    $data = json_decode($json_string, true);
-
-    echo "<pre>";
-    print_r($data);
-    echo "</pre>";
+    echo json_encode($results, JSON_UNESCAPED_UNICODE);
 } catch (PDOException $e) {
     echo "Ошибка: " . $e->getMessage();
     die();

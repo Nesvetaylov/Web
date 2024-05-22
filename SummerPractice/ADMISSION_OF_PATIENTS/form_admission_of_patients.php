@@ -46,9 +46,9 @@
                 </div>
 
                 <div class="form-section">
-                    <label for="BIRTHDATE">Дата рождения:</label>
-                    <input type="date" class="form-control" id="BIRTHDATE" name="BIRTHDATE" <?php if (($errors['BIRTHDATE'])) {print 'class="error"';} ?>
-                    value="<?php if (isset($values['BIRTHDATE'])) {print $values['BIRTHDATE'];} ?>" />
+                    <label for="DATE">Дата рождения:</label>
+                    <input type="date" class="form-control" id="DATE" name="DATE" <?php if (($errors['DATE'])) {print 'class="error"';} ?>
+                    value="<?php if (isset($values['DATE'])) {print $values['DATE'];} ?>" />
                 </div>
 
                 <div class="form-section">
@@ -74,7 +74,7 @@
 
                         $sql = "SELECT DOCTOR_ID,SPECIALITY_DOCTOR, FIO_DOCTOR FROM DOCTORS";
                         $result = $conn->query($sql);
-                        echo "<select name='doctor_id' class='form-control'>";
+                        echo "<select name='DOCTOR_ID' class='form-control'>";
 
                         if ($result->num_rows > 0) {
                             while($row = $result->fetch_assoc()) {

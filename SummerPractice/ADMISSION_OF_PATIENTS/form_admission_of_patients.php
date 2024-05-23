@@ -25,7 +25,7 @@
 
     <body>
         <div class='form-container'>
-            <h2>Форма для заполнения информации о пациенте</h2>
+            <h2>Форма для заполнения информации о приёме</h2>
             <form action="admission_of_patients.php" method="POST">
                 <div class="form-section">
                     <label for="LAST_NAME">Фамилия:</label>

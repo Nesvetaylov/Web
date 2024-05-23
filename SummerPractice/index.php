@@ -27,7 +27,7 @@
             <a href="DOCTORS/index.php" class="button">Добавить врача</a>
             <a href="PATIENTS/patients.php" class="button">Добавить пациента</a>
             <a href="ADMISSION_OF_PATIENTS/admission_of_patients.php" class="button"> Записаться на прием</a>
-            <a href="queries.html" class="button">QUERIES</a>
+            <a href="queries.php" class="button">QUERIES</a>
         </div>
     </main>
 

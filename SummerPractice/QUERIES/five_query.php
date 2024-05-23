@@ -10,7 +10,7 @@ $password = password;
 echo "<h2>Запрос 5: Выбирает из таблиц ВРАЧИ, ПАЦИЕНТЫ и ПРИЕМ информацию обо всех приемах в некоторый заданный интервал времени</h2>";
 try {
     $conn = new PDO( "mysql:host=localhost;dbname=$username", $username, $password, [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION] );
-    $start_date = '2024-04-08';
+    $start_date = '2022-04-08';
     $end_date = '2024-08-08';
     $query = "SELECT d.DOCTOR_ID, d.FIO_DOCTOR, d.SPECIALITY_DOCTOR, d.COST_OF_ADMISSION, d.PERCENTAGE_OF_SALARY
               FROM DOCTORS d

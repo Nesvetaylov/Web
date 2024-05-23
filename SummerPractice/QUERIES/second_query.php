@@ -9,7 +9,7 @@ $password = password;
 echo "<h2>Запрос 2: Выбирает из таблицы ПАЦИЕНТЫ информацию о пациентах, родившихся до 01.01.2000</h2>";
 try {
     $conn = new PDO( "mysql:host=localhost;dbname=$username", $username, $password, [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION] );
-    $query = "SELECT * FROM PATIENTS WHERE BIRTHDATE < 2000";
+    $query = "SELECT * FROM PATIENTS WHERE BIRTHDATE < 01.01.2000";
     $stmt = $conn->query($query);
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

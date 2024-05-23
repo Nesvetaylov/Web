@@ -9,7 +9,7 @@ echo "<h2> Запрос 7: Выполняет группировку по пол
 
 try {
     $conn = new PDO( "mysql:host=localhost;dbname=$username", $username, $password, [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION] );
-    $query = "SELECT DATE, AVG(COST_OF_ADMISSION) AS Средняя_стоимость_приема FROM ADMISSION_OF_PATIENTS GROUP BY DATE";
+    $query = "SELECT a.DATE, AVG(d.COST_OF_ADMISSION) AS Средняя_стоимость_приема FROM ADMISSION_OF_PATIENTS a JOIN DOCTORS d ON a.DOCTOR_ID = d.DOCTOR_ID GROUP BY a.DATE";
     $stmt = $conn->query($query);
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 

@@ -131,21 +131,12 @@ try {
         $pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         //echo "selecting:,";
-        $sql = "INSERT INTO PATIENTS (LAST_NAME,FIRST_NAME, MIDDLE_NAME, BIRTHDATE, ADDRESS) VALUES (:lastname, :firstname, :middlename, :birthdate, :address)";
-        $stmt = $pdo->prepare($sql);
-
-        $stmt->bindParam(':lastname', $lastname);
-        $stmt->bindParam(':firstname', $firstname);
-        $stmt->bindParam(':middlename', $middlename);
-        $stmt->bindParam(':birthdate', $birthdate);
-        $stmt->bindParam(':address', $address);
-
-        $stmt->execute();
+        $sql = "INSERT INTO PATIENTS (LAST_NAME,FIRST_NAME, MIDDLE_NAME, BIRTHDATE, ADDRESS) VALUES (?, ?, ?, ?, ?,)";
+        $stmt = $pdo->prepare($sql);;
+        $stmt->execute([$lastname, $firstname, $middlename, $birthdate, $address]);
         echo "Пациент успешно добавлен.";
         $lastId = $pdo->lastInsertId();
         echo "ID нового пациента: $lastId <br>";
-
-
     } catch (PDOException $e) {
         $errors['database'] = "Ошибка при добавлении врача: " . $e->getMessage();
         echo "Ошибка при добавлении врача: " . $e->getMessage();

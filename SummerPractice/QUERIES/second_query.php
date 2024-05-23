@@ -13,14 +13,24 @@ try {
     $query = "SELECT * FROM PATIENTS WHERE BIRTHDATE < '2000-01-01'";
     $stmt = $conn->query($query);
     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+    echo '<table class="table">';
+    echo '<tr>';
+    echo "<td>Номер пациента</td>";
+    echo "<td>Фамилия</td>";
+    echo "<td>Имя</td>";
+    echo "<td>Отчество</td>";
+    echo "<td>Дата рождения</td>";
+    echo "<td>Адрес</td>";
+    echo '</tr>';
     foreach ($results as $row) {
-        echo "Номер пациента: " . $row['PATIENT_ID'] . "<br>";
-        echo "Фамилия: " . $row['LAST_NAME'] . "<br>";
-        echo "Имя: " . $row['FIRST_NAME'] . "<br>";
-        echo "Отчество: " . $row['MIDDLE_NAME'] . "<br>";
-        echo "Дата рождения: " . $row['BIRTHDATE'] . "<br>";
-        echo "Адрес: " . $row['ADDRESS'] . "<br><br><br>";
+        echo '<tr>';
+        echo "<td>" . $row['PATIENT_ID'] . "</td>";
+        echo "<td>" . $row['LAST_NAME'] . "</td>";
+        echo "<td>" . $row['FIRST_NAME'] . "</td>";
+        echo "<td>" . $row['MIDDLE_NAME'] . "</td>";
+        echo "<td>" . $row['BIRTHDATE'] . "</td>";
+        echo "<td>" . $row['ADDRESS'] . "</td>";
+        echo '</tr>';
     }
 } catch (PDOException $e) {
     echo "Ошибка: " . $e->getMessage();

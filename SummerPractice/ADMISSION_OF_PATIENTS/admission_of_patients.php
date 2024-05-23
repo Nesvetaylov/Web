@@ -127,12 +127,11 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dbname = username;
 
 
-try {
+    try {
         $pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        //echo "selecting:,";
-        $sql = "INSERT INTO PATIENTS (LAST_NAME,FIRST_NAME, MIDDLE_NAME, BIRTHDATE, ADDRESS) VALUES (?, ?, ?, ?, ?,)";
-        $stmt = $pdo->prepare($sql);;
+        $sql = "INSERT INTO PATIENTS (LAST_NAME,FIRST_NAME, MIDDLE_NAME, BIRTHDATE, ADDRESS) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $pdo->prepare($sql);
         $stmt->execute([$lastname, $firstname, $middlename, $birthdate, $address]);
         echo "Пациент успешно добавлен.";
         $lastId = $pdo->lastInsertId();

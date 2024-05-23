@@ -48,6 +48,33 @@ body {
     width: 100%;
 }
 
+/* Add the following CSS rules to the existing style_of_site.css file */
+
+.query-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+}
+
+.query-button {
+    background-color: #007bff;
+    /* blue color */
+    color: #fff;
+    border: none;
+    padding: 1em 2em;
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-bottom: 1em;
+    margin-right: 1em;
+    flex-basis: calc(33.333% - 20px);
+}
+
+.query-button:hover {
+    background-color: #0069d9;
+    /* darker blue color */
+}
+
 .button {
     background-color: #007bff;
     /* blue color */

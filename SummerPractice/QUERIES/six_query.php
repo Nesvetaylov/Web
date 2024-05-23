@@ -10,7 +10,7 @@ $password = password;
 echo "<h2>Запрос 6: Вычисляет размер заработной платы врача за каждый прием</h2>";
 try {
     $conn = new PDO( "mysql:host=localhost;dbname=$username", $username, $password, [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION] );
-    $query = "SELECT d.FIO_DOCTOR, d.SPECIALITY_DOCTOR, aop.COST_OF_ADMISSION, d.PERCENTAGE_OF_SALARY, (aop.COST_OF_ADMISSION * d.PERCENTAGE_OF_SALARY) AS Зарплата
+    $query = "SELECT d.DOCTOR_ID, d.FIO_DOCTOR, d.SPECIALITY_DOCTOR, d.COST_OF_ADMISSION, d.PERCENTAGE_OF_SALARY, (d.COST_OF_ADMISSION * d.PERCENTAGE_OF_SALARY) AS Зарплата
     FROM DOCTORS d
     JOIN ADMISSION_OF_PATIENTS aop ON d.DOCTOR_ID = aop.DOCTOR_ID;";
     $stmt = $conn->query($query);

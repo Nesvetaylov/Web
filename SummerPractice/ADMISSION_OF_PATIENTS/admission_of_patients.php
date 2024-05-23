@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
         setcookie('SAVE', '', 100000);
         $messages[]='Спасибо, результаты сохранены.';
     }
-    
+
     $errors = array();
     $errors['LAST_NAME'] = !empty($_COOKIE['LAST_NAME_errors']);
     $errors['FIRST_NAME'] = !empty($_COOKIE['FIRST_NAME_errors']);
@@ -52,59 +52,58 @@ if ($_SERVER['REQUEST_METHOD']=='GET') {
 }
 elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-    $lastname=$firstname=$middlename=$birthdate=$address='';
-    $lastname=$_POST['LAST_NAME'];
-    $firstname=$_POST['FIRST_NAME'];
-    $middlename=$_POST['MIDDLE_NAME'];
-    $birthdate=$_POST['BIRTHDATE'];
-    $address=$_POST['ADDRESS'];
+    $lastname = $_POST['LAST_NAME'];
+    $firstname = $_POST['FIRST_NAME'];
+    $middlename = $_POST['MIDDLE_NAME'];
+    $birthdate = $_POST['BIRTHDATE'];
+    $address = $_POST['ADDRESS'];
 
     $errors = FALSE;
     //(1) LAST_NAME CHECK
-    if (empty(trim($_POST['LAST_NAME'])) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,150}$/u', $_POST['LAST_NAME'])) {
+    if (empty(trim($lastname)) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,150}$/u', $lastname)) {
         $errors = TRUE;
         setcookie('LAST_NAME_error', '1', time() + 24 * 60 * 60);
         print('Необходимо заполнить фамилию'."\n");
     }
     else{
-        setcookie('LAST_NAME_value', $_POST['LAST_NAME'], time() + 30 * 24 * 60 * 60);
+        setcookie('LAST_NAME_value', $lastname, time() + 30 * 24 * 60 * 60);
     }
     //(2) FIRST_NAME CHECK
-    if(empty($_POST['FIRST_NAME']) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,150}$/u', $_POST['FIRST_NAME'])){
+    if(empty($firstname) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,150}$/u', $firstname)){
         $errors = TRUE;
         setcookie('FIRST_NAME_error', '1', time() + 24 * 60 * 60);
         print('Необходимо заполнить имя'."\n");
     }
     else{
-        setcookie('FIRST_NAME_value', $_POST['FIRST_NAME'], time() + 30 * 24 * 60 * 60);
+        setcookie('FIRST_NAME_value', $firstname, time() +30 * 24 * 60 * 60);
     }
     //(3) MIDDLE_NAME CHECK
-    if(empty($_POST['MIDDLE_NAME']) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,150}$/u', $_POST['MIDDLE_NAME'])){
+    if(empty($middlename) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,150}$/u', $middlename)){
         $errors = TRUE;
         setcookie('MIDDLE_NAME_error', '1', time() + 24 * 60 * 60);
         print('Необходимо заполнить отчество'."\n");
     }
     else{
-        setcookie('MIDDLE_NAME_value', $_POST['MIDDLE_NAME'], time() + 30 * 24 * 60 * 60);
+        setcookie('MIDDLE_NAME_value', $middlename, time() + 30 * 24 * 60 * 60);
     }
     //(4) BIRTHDATE CHECK
-    $dateObject = DateTime::createFromFormat('Y-m-d', $_POST['BIRTHDATE']);
-    if ($dateObject === false || $dateObject->format('Y-m-d') !== $_POST['BIRTHDATE']) {
+    $dateObject = DateTime::createFromFormat('Y-m-d', $birthdate);
+    if ($dateObject === false || $dateObject->format('Y-m-d') !== $birthdate) {
         $errors = TRUE;
         setcookie('BIRTHDATE_error', '1', time() + 24 * 60 * 60);
         print ('Укажите дату рождения');
     }
     else{
-        setcookie('BIRTHDATE_value', $_POST['BIRTHDATE'], time() + 30 * 24 * 60 * 60);
+        setcookie('BIRTHDATE_value', $birthdate, time() + 30 * 24 * 60 * 60);
     }
     //(5) ADDRESS CHECK
-    if(empty($_POST['ADDRESS'])){
+    if(empty($address)){
         $errors = TRUE;
         setcookie('ADDRESS_error', '1', time() + 24 * 60 * 60);
         print('Укажите корректный адрес'."\n");
     }
     else{
-        setcookie('ADDRESS_value', $_POST['ADDRESS'], time() + 30 * 24 * 60 * 60);
+        setcookie('ADDRESS_value', $address, time() + 30 * 24 * 60 * 60);
     }
 
     $mas=array();
@@ -128,20 +127,19 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
     $dbname = username;
 
 
-
-
-    try {
+try {
         $pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         //echo "selecting:,";
         $sql = "INSERT INTO PATIENTS (LAST_NAME,FIRST_NAME, MIDDLE_NAME, BIRTHDATE, ADDRESS) VALUES (:lastname, :firstname, :middlename, :birthdate, :address)";
         $stmt = $pdo->prepare($sql);
 
-        $stmt->bindParam(':lastname', $_POST['LAST_NAME']);
-        $stmt->bindParam(':firstname', $_POST['FIRST_NAME']);
-        $stmt->bindParam(':middlename', $_POST['MIDDLE_NAME']);
-        $stmt->bindParam(':birthdate', $_POST['BIRTHDATE']);
-        $stmt->bindParam(':address', $_POST['ADDRESS']);
+        $stmt->bindParam(':lastname', $lastname);
+        $stmt->bindParam(':firstname', $firstname);
+        $stmt->bindParam(':middlename', $middlename);
+        $stmt->bindParam(':birthdate', $birthdate);
+        $stmt->bindParam(':address', $address);
+
         $stmt->execute();
         echo "Пациент успешно добавлен.";
         $lastId = $pdo->lastInsertId();
@@ -157,4 +155,3 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 exit;
 ?>
-

@@ -7,6 +7,7 @@ include('../Secret.php');
 // HTTP Basic Authentication
 $username = username;
 $password = password;
+$dbname = username;
 
 if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || $_SERVER['PHP_AUTH_USER'] != $username || $_SERVER['PHP_AUTH_PW'] != $password) {
     header('WWW-Authenticate: Basic realm="Admin Area"');

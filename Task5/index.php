@@ -2,7 +2,38 @@
 header('Content-Type: text/html; charset=UTF-8');
 
 
+session_start();
 
+if (isset($_SESSION['login']) && isset($_SESSION['password'])) {
+    // Если сессия уже существует, то загружаем данные из базы данных и отображаем их в форме
+    try {
+        $conn = new PDO("mysql:host=localhost;dbname=$dbname", $username, $password);
+        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $stmt = $conn->prepare("SELECT * FROM REQUEST WHERE login = ? AND password = ?");
+        $stmt->execute([$_SESSION['login'], $_SESSION['password']]);
+        $user = $stmt->fetch();
+        if ($user) {
+            $values['FIO'] = $user['FIO'];
+            $values['PHONE'] = $user['PHONE'];
+            $values['EMAIL'] = $user['EMAIL'];
+            $values['BIRTHDATE'] = $user['BIRTHDATE'];
+            $values['GENDER'] = $user['GENDER'];
+            $values['BIOGRAFY'] = $user['BIOGRAFY'];
+            $stmt = $conn->prepare("SELECT Lang_NAME FROM ANSWER INNER JOIN Lang_Prog ON ANSWER.Lang_ID = Lang_Prog.Lang_ID WHERE ID = ?");
+            $stmt->execute([$user['ID']]);
+            $values['Lang_Prog'] = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        }
+    } catch (PDOException $e) {
+        $mas[] = "Connection failed: " . $e->getMessage();
+    }
+    $conn = null;
+} else {
+    // Если сессия не существует, то генерируем новый логин и пароль и сохраняем их в сессии
+    $login = generateRandomString(10);
+    $password = generateRandomString(15);
+    $_SESSION['login'] = $login;
+    $_SESSION['password'] = $password;
+}
 // Function to generate a random string
 function generateRandomString($length = 10) {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';

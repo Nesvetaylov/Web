@@ -182,13 +182,14 @@ else {
         print (" mistake in check ");
     }*/
 
-    if(!isset($_POST['CONTRACT'])){
+    if(!isset($_POST['CONTRACT']) || empty($_POST['CONTRACT'])){
         $errors = TRUE;
         setcookie('CONTRACT_error', '1', time() + 24 * 60 * 60);
         print (" mistake in галочка ");
     }
-    else setcookie('CONTRACT_value', $_POST['CONTRACT'], time() + 30 * 24 * 60 * 60);
-
+    else {
+        setcookie('CONTRACT_value', $_POST['CONTRACT'], time() + 30 * 24 * 60 * 60);
+    }
     if ($errors === TRUE) {
         echo 'mistake';
         exit();
@@ -207,7 +208,7 @@ else {
     }
 
 
-    include('../Secret.php');
+    include('../Secret');
     $servername = "localhost";
     $username = username;
     $password = password;

@@ -1,84 +1,97 @@
-<html>
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <style>
-    .error {
-    border: 2px solid red;}
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <meta charset="utf-8">
-    <title>
-        <a 5 Задание>
-        </a>
-    </title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <title>task 5</title>
 </head>
 
+
 <body>
+
 <?php
-    if (!empty($messages)) {
-      print('<div id="messages">');
-      // Выводим все сообщения.
-      foreach ($messages as $message) {
+if (!empty($messages)) {
+    print('<div id="messages">');
+    // Выводим все сообщения.
+    foreach ($messages as $message) {
         print($message);
-      }
-      print('</div>');
     }
+    print('</div>');
+}
 ?>
-<form class='form-container' action="index.php" method="POST">
-        <label>
-          <strong> Фамилия имя отчество:</strong>
-          <br>
-          <input name="FIO" type="text"
-          <?php if ($errors['FIO']) {print 'class="error"';} ?> value="<?php print $values['FIO']; ?>" placeholder="ФИО" />
-      </label>
-    <!-- <label for="FIO">Full name:</label> -->
-    <!-- <input class="lab" type="text" id="FIO" name="FIO" required> -->
-    <!-- <input name="FIO" type="text"<?php// if ($errors['FIO']) {print 'class="error"';} ?> value="<?php// print $values['FIO']; ?>" placeholder="ФИО"/> -->
-    <br>
-    <label for="PHONE">Phone number:</label>
-    <input name="PHONE" <?php if ($errors['PHONE']) {print 'class="error"';} ?> value="<?php print $values['PHONE']; ?>">
-    <br>
-    <label for="EMAIL">e-mail:</label>
-    <input name="EMAIL" <?php if ($errors['EMAIL']) {print 'class="error"';} ?> value="<?php print $values['EMAIL']; ?>">
-    <br>
-    <label for="BIRTHDATE">Date of Birth:</label>
-    <input value="2023-09-24" name="BIRTHDATE" <?php if ($errors['BIRTHDATE']) {print 'class="error"';} ?> value="<?php print $values['BIRTHDATE']; ?>">
-    <br>
-    <label for="GENDER">Choose gender:</label>
-    <input type="radio" id="male" name="GENDER" value="male" <?php if($values['GENDER']=='male'){print 'checked';} ?>>
-    <label for="male">Мужской</label>
-    <input type="radio" id="female" name="GENDER" value="female" <?php if($values['GENDER']=='female'){print 'checked';}?>>
-    <label for="male">Женский</label>
-    <br>
-    <label>
-        <select class="lab" name="Lang_Prog[]" multiple="multiple">
-            <option value="1" <?php if (in_array('1', $values['Lang_Prog'])) { print 'selected'; } ?>> Pascal</option>
-            <option value="2" <?php if (in_array('2', $values['Lang_Prog'])) { print 'selected'; } ?>> C</option>
-            <option value="3" <?php if (in_array('3', $values['Lang_Prog'])) { print 'selected'; } ?>> C++</option>
-            <option value="4" <?php if (in_array('4', $values['Lang_Prog'])) { print 'selected'; } ?>> JavaScript</option>
-            <option value="5" <?php if (in_array('5', $values['Lang_Prog'])) { print 'selected'; } ?>> PHP</option>
-            <option value="6" <?php if (in_array('6', $values['Lang_Prog'])) { print 'selected'; } ?>> Python</option>
-            <option value="7" <?php if (in_array('7', $values['Lang_Prog'])) { print 'selected'; } ?>> Java</option>
-            <option value="8" <?php if (in_array('8', $values['Lang_Prog'])) { print 'selected'; } ?>> Haskel</option>
-            <option value="9" <?php if (in_array('9', $values['Lang_Prog'])) { print 'selected'; } ?>> Clojure</option>
-            <option value="10" <?php if (in_array('10', $values['Lang_Prog'])) { print 'selected'; } ?>> Prolog</option>
-            <option value="11" <?php if (in_array('11', $values['Lang_Prog'])) { print 'selected'; } ?>> Scala</option>
-        </select>
-    </label>
-    <br>
-    <label for="BIOGRAFY">Biography:</label>
-    <br>
-    <textarea  name="BIOGRAFY" <?php if ($errors['BIOGRAFY']) {print 'class="error"';} ?> placeholder='Ваша история'><?php print $values['BIOGRAFY']; ?></textarea>
-    <br>
-    <label>
-        <input type="checkbox" checked="checked">
-    </label> С контрактом ознакомлен(а)<br>
-    <button class="button"> Сохранить </button>
-    <input class="button" type="submit" value="Отправить">
-</form>
+
+
+<div class="form-structor">
+    <h2 class="form-title">Форма</h2>
+    <form action="index.php" method="POST" class="form_main">
+        <div class="form-group">
+            <label for="fio">ФИО:</label>
+            <input type="text" id="fio" name="fio" 
+                <?php if ($errors['fio']) {print 'class="error"';} ?> value="<?php print $values['fio']; ?>" placeholder="ФИО" />
+        </div>
+        <div class="form-group">
+            <label for="phone">Телефон:</label>
+            <input type="tel" id="phone" name="phone" 
+                <?php if ($errors['phone']) {print 'class="error"';} ?> value="<?php print $values['phone']; ?>" placeholder="+7(___)___-__-__" />
+        </div>
+        <div class="form-group">
+            <label for="email">E-mail:</label>
+            <input type="email" class="form-control" id="email" name="email" 
+                <?php if ($errors['email']) {print 'class="error"';} ?> value="<?php print $values['email']; ?>" placeholder="email" />
+        </div>
+        <div class="form-group">
+            <label for="birthdate">Дата рождения:</label>
+            <input type="date" class="form-control" id="birthdate" name="birthdate" 
+                <?php if ($errors['birthdate']) {print 'class="error"';} ?> value="<?php print $values['birthdate']; ?>" />
+        </div>
+        <div class="form-group">
+            <label>Пол:</label>
+            <div>
+                <input type="radio" id="male" name="gender" value="male" 
+                    <?php if ($values['gender']==='male') {print 'checked';} ?>"
+                <label for="male">Мужской</label>
+            </div>
+            <div>
+                <input type="radio" id="female" name="gender" value="female"
+                <?php if ($values['gender']==='female') {print 'checked';} ?>"
+                <label for="female">Женский</label>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="programming-language">Любимый язык программирования:</label>
+            <select class="form-control" id="programming-language" name="programming-language" multiple>
+                <option value="Pascal" <?php if (in_array('Pascal', $values['programming-language'])) { print 'selected'; } ?>>Pascal</option>
+                <option value="C" <?php if (in_array('C', $values['programming-language'])) { print 'selected'; } ?>>C</option>
+                <option value="C++" <?php if (in_array('C++', $values['programming-language'])) { print 'selected'; } ?>>C++</option>
+                <option value="JavaScript" <?php if (in_array('JavaScript', $values['programming-language'])) { print 'selected'; } ?>>JavaScript</option>
+                <option value="PHthon" <?php if (in_array('PHthon', $values['programming-language'])) { print 'selected'; } ?>>Python</option>
+                <option value="JavP" <?php if (in_array('JavP', $values['programming-language'])) { print 'selected'; } ?>>PHP</option>
+                <option value="Pya" <?php if (in_array('Pya', $values['programming-language'])) { print 'selected'; } ?>>Java</option>
+                <option value="Haskel" <?php if (in_array('Haskel', $values['programming-language'])) { print 'selected'; } ?>>Haskel</option>
+                <option value="Clrolog" <?php if (in_array('Clrolog', $values['programming-language'])) { print 'selected'; } ?>>Prolog</option>
+                <option value="Sojure" <?php if (in_array('Sojure', $values['programming-language'])) { print 'selected'; } ?>>Clojure</option>
+                <option value="Pcala" <?php if (in_array('Pcala', $values['programming-language'])) { print 'selected'; } ?>>Scala</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="bio">Биография:</label>
+            <textarea class="form-control" id="bio" name="bio" rows="4"  <?php if ($errors['bio']) {print 'class="error"';} ?>
+            ><?php print $values['bio']; ?></textarea>
+        </div>
+        <div class="form-group form-check">
+            <input type="checkbox" class="form-check-input" id="contract" name="contract" 
+                <?php if ($errors['contract']) {print 'class="error"';} ?> value="" />
+            <label class="form-check-label" for="contract">С контрактом ознакомлен(а)</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </form>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
-
-
-
-
-

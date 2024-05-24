@@ -5,8 +5,8 @@ header('Content-Type: text/html; charset=UTF-8');
 include('../Secret.php');
 
 // HTTP Basic Authentication
-$adminUsername = 'admin';
-$adminPassword = 'your_admin_password';
+$adminUsername = 'u67281';
+$adminPassword = '9872763';
 
 if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || $_SERVER['PHP_AUTH_USER'] != $adminUsername || $_SERVER['PHP_AUTH_PW'] != $adminPassword) {
     header('WWW-Authenticate: Basic realm="Admin Area"');

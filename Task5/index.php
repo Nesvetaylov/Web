@@ -203,21 +203,21 @@ else {
   setcookie('Lang_Prog_error', '', 100000);
   // TODO: тут необходимо удалить остальные Cookies.
 
-  // Insert the user data into the database, including the generated login and password
-  $sql = "INSERT INTO REQUEST (FIO, PHONE, EMAIL, BIRTHDATE, GENDER, BIOGRAFY, login, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-  $stmt = $conn->prepare($sql);
-  $stmt->execute([$fio, $phone, $email, $birthdate, $gender, $biografy, $login, $password]);
-
-  // Display the generated login and password to the user once
-  echo '<div class="success">Your unique login: ' . $login . ' and password: ' . $password . ' have been generated. Please save them for future reference.</div>';
+  
 }
 try {
     $conn = new PDO("mysql:host=localhost;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     echo "Connected successfully ";
-    $sql = "INSERT INTO REQUEST (FIO, PHONE, EMAIL, BIRTHDATE, GENDER, BIOGRAFY) VALUES (?, ?, ?, ?, ?, ?)";
+
+    // Insert the user data into the database, including the generated login and password
+    $sql = "INSERT INTO REQUEST (FIO, PHONE, EMAIL, BIRTHDATE, GENDER, BIOGRAFY, login, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->execute([$fio, $phone, $email, $birthdate, $gender, $biografy]);
+    $stmt->execute([$fio, $phone, $email, $birthdate, $gender, $biografy, $login, $password]);
+
+    
+    // Display the generated login and password to the user once
+    echo '<div class="success">Your unique login: ' . $login . ' and password: ' . $password . ' have been generated. Please save them for future reference.</div>';
     $lastId = $conn->lastInsertId();
     $Lang_selection = "SELECT Lang_ID FROM Lang_Prog WHERE Lang_NAME = ?";
     $Lang_prepare = $conn->prepare($Lang_selection);
@@ -230,7 +230,7 @@ try {
     }
 
 } catch(PDOException $e) {
-  $mas[]="Connection failed: " . $e->getMessage();
+    $mas[]="Connection failed: " . $e->getMessage();
 }
 $conn = null;
 // Сохраняем куки с признаком успешного сохранения.

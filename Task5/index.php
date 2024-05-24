@@ -99,6 +99,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $values['BIOGRAFY'] = empty($_COOKIE['BIOGRAFY_value']) ? '' : $_COOKIE['BIOGRAFY_value'];
     $values['CONTRACT'] = empty($_COOKIE['CONTRACT_value']) ? '' : $_COOKIE['CONTRACT_value'];
 
+
+    $started_session = session_start();
+
     if (!empty($_COOKIE[session_name()]) &&
         $started_session && !empty($_SESSION['entered'])) {
         $messages[]='Вход с логином: '. $_SESSION['login'];

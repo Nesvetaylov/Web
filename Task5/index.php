@@ -125,7 +125,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 else {
 //обработка POST запроса
     $FIO = $PHONE = $EMAIL = $BIRTHDATE = $GENDER = '';
-    $langs = [];
     $FIO = $_POST['FIO'];
     $PHONE = $_POST['PHONE'];
     $EMAIL = $_POST['EMAIL'];

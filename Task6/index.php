@@ -5,11 +5,10 @@ header('Content-Type: text/html; charset=UTF-8');
 include('../Secret.php');
 
 // HTTP Basic Authentication
-$username = username;
-$password = password;
-$dbname = username;
+$adminUsername = 'admin';
+$adminPassword = 'your_admin_password';
 
-if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || $_SERVER['PHP_AUTH_USER'] != $username || $_SERVER['PHP_AUTH_PW'] != $password) {
+if (!isset($_SERVER['PHP_AUTH_USER']) || !isset($_SERVER['PHP_AUTH_PW']) || $_SERVER['PHP_AUTH_USER'] != $adminUsername || $_SERVER['PHP_AUTH_PW'] != $adminPassword) {
     header('WWW-Authenticate: Basic realm="Admin Area"');
     header('HTTP/1.0 401 Unauthorized');
     echo 'Access denied.';
@@ -42,23 +41,30 @@ function showUserData()
     global $conn;
 
     try {
-        $stmt = $conn->query('SELECT * FROM REQUEST');
+        $stmt = $conn->prepare('SELECT * FROM User_Prog');
+        $stmt->execute();
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if (count($results) > 0) {
             echo '<table border="1">';
-            echo '<tr><th>ID</th><th>FIO</th><th>Phone</th><th>Email</th><th>Birthdate</th><th>Gender</th><th>Biography</th><th>Actions</th></tr>';
+            echo '<tr><th>ID</th><th>Language</th><th>Username</th><th>Program</th><th>Action</th></tr>';
 
             foreach ($results as $row) {
                 echo '<tr>';
-                echo '<td>' . $row['ID'] . '</td>';
-                echo '<td>' . htmlspecialchars($row['FIO']) . '</td>';
-                echo '<td>' . htmlspecialchars($row['PHONE']) . '</td>';
-                echo '<td>' . htmlspecialchars($row['EMAIL']) . '</td>';
-                echo '<td>' . htmlspecialchars($row['BIRTHDATE']) . '</td>';
-                echo '<td>' . htmlspecialchars($row['GENDER']) . '</td>';
-                echo '<td>' . htmlspecialchars($row['BIOGRAFY']) . '</td>';
-                echo '<td><a href="?id=' . $row['ID'] . '&lang=1">Edit</a> | <a href="?id=' . $row['ID'] . '&lang=2">Delete</a></td>';
+                echo '<td>' . htmlspecialchars($row['ID']) . '</td>';
+                echo '<td>' . htmlspecialchars($row['Lang_NAME']) . '</td>';
+                echo '<td>' . htmlspecialchars($row['Username']) . '</td>';
+                echo '<td>' . htmlspecialchars($row['Program']) . '</td>';
+                echo '<td><form method="post" action="">
+                        <input type="hidden" name="id" value="' . htmlspecialchars($row['ID']) . '">
+                        <input type="hidden" name="action" value="edit">
+                        <input type="submit" value="Edit">
+                      </form>
+                      <form method="post" action="">
+                        <input type="hidden" name="id" value="' . htmlspecialchars($row['ID']) . '">
+                        <input type="hidden" name="action" value="delete">
+                        <input type="submit" value="Delete">
+                      </form></td>';
                 echo '</tr>';
             }
 
@@ -68,42 +74,6 @@ function showUserData()
         }
     } catch (PDOException $e) {
         echo 'Error: ' . $e->getMessage();
-    }
-}
-
-function editUserData()
-{
-    global $conn;
-
-    if (isset($_POST['id']) && isset($_POST['FIO']) && isset($_POST['PHONE']) && isset($_POST['EMAIL']) && isset($_POST['BIRTHDATE']) && isset($_POST['GENDER']) && isset($_POST['BIOGRAFY'])) {
-        try {
-            $stmt = $conn->prepare('UPDATE REQUEST SET FIO=?, PHONE=?, EMAIL=?, BIRTHDATE=?, GENDER=?, BIOGRAFY=? WHERE ID=?');
-            $stmt->execute([$_POST['FIO'], $_POST['PHONE'], $_POST['EMAIL'], $_POST['BIRTHDATE'], $_POST['GENDER'], $_POST['BIOGRAFY'], $_POST['id']]);
-
-            echo 'User data updated successfully.';
-        } catch (PDOException $e) {
-            echo 'Error: ' . $e->getMessage();
-        }
-    } else {
-        echo 'Invalid request.';
-    }
-}
-
-function deleteUserData()
-{
-    global $conn;
-
-    if (isset($_GET['id'])) {
-        try {
-            $stmt = $conn->prepare('DELETE FROM REQUEST WHERE ID=?');
-            $stmt->execute([$_GET['id']]);
-
-            echo 'User data deleted successfully.';
-        } catch (PDOException $e) {
-            echo 'Error: ' . $e->getMessage();
-        }
-    } else {
-        echo 'Invalid request.';
     }
 }
 
@@ -142,4 +112,56 @@ function showLanguageStats()
     }
 }
 
-$conn = null;
+function editUserData()
+{
+    global $conn;
+
+    $id = $_POST['id'];
+    $username = $_POST['username'];
+    $program = $_POST['program'];
+
+    try {
+        $stmt = $conn->prepare('UPDATE User_Prog SET Username = :username, Program = :program WHERE ID = :id');
+        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':program', $program);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        echo 'User data updated successfully.';
+    } catch (PDOException $e) {
+        echo 'Error: ' . $e->getMessage();
+    }
+}
+
+function deleteUserData()
+{
+    global $conn;
+
+    $id = $_POST['id'];
+
+    try {
+        $stmt = $conn->prepare('DELETE FROM User_Prog WHERE ID = :id');
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        echo 'User data deleted successfully.';
+    } catch (PDOException $e) {
+        echo 'Error: ' . $e->getMessage();
+    }
+}
+
+if (isset($_POST['action'])) {
+    if ($_POST['action'] == 'edit') {
+        editUserData();
+    } else if ($_POST['action'] == 'delete') {
+        deleteUserData();
+    }
+}
+
+if (isset($_GET['action'])) {
+    if ($_GET['action'] == 'stats') {
+        showLanguageStats();
+    }
+}
+
+showUserData();
+
+?>

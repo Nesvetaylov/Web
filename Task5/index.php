@@ -1,5 +1,25 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8');
+
+
+
+// Function to generate a random string
+function generateRandomString($length = 10) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, strlen($characters) - 1)];
+    }
+    return $randomString;
+}
+
+
+
+
+
+
+
+
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   $messages=array();
     // В суперглобальном массиве $_GET PHP хранит все параметры, переданные в текущем запросе через URL.
@@ -97,6 +117,10 @@ function checkLangs($langs, $langs_check) {
     return TRUE;
 }
 
+// Generate a unique login and password
+$login = generateRandomString(10);
+$password = generateRandomString(15);
+
 
 if ($_SERVER['REQUEST_METHOD'] != 'POST') {
     echo 'This script only works with POST queries';
@@ -178,6 +202,14 @@ else {
   setcookie('BIOGRAFY_error', '', 100000);
   setcookie('Lang_Prog_error', '', 100000);
   // TODO: тут необходимо удалить остальные Cookies.
+
+  // Insert the user data into the database, including the generated login and password
+  $sql = "INSERT INTO REQUEST (FIO, PHONE, EMAIL, BIRTHDATE, GENDER, BIOGRAFY, login, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+  $stmt = $conn->prepare($sql);
+  $stmt->execute([$fio, $phone, $email, $birthdate, $gender, $biografy, $login, $password]);
+
+  // Display the generated login and password to the user once
+  echo '<div class="success">Your unique login: ' . $login . ' and password: ' . $password . ' have been generated. Please save them for future reference.</div>';
 }
 try {
     $conn = new PDO("mysql:host=localhost;dbname=$dbname", $username, $password);
@@ -206,11 +238,4 @@ setcookie('SAVE', '1');
 setcookie('MAS', serialize($mas));
 // Делаем перенаправление.
 header('Location: index.php');
-?>
-
-
-<!-- ГЕНЕРАЦИЯ РАНДОМНОГО ЛОГИНА И ПАРОЛЯ И ПОДКЛЮЧЕНИЕ К БД -->
-<?php
-//Подключение к БД
-
 ?>

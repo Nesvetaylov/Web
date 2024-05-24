@@ -3,7 +3,10 @@ header('Content-Type: text/html; charset=UTF-8');
 
 
 session_start();
-
+include("../Secret.php");
+$username = username;
+$password = password;
+$dbname = username;
 if (isset($_SESSION['login']) && isset($_SESSION['password'])) {
     // Если сессия уже существует, то загружаем данные из базы данных и отображаем их в форме
     try {

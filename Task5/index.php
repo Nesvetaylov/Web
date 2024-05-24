@@ -1,105 +1,274 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8');
 
-// Generate unique login and password
-function generateLoginPassword() {
-    $login = substr(str_shuffle("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 8);
-    $password = substr(str_shuffle("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"), 0, 12);
-    return array($login, $password);
-}
 
-// Check if user is logged in
 session_start();
-if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
-    $username = $_SESSION['username'];
-    $password = $_SESSION['password'];
-} else {
-    $username = '';
-    $password = '';
-}
-
-// Handle form submission
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Validate form data
-    $errors = array();
-    if (empty($_POST['FIO']) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,150}$/u', $_POST['FIO'])) {
-        $errors[] = 'Ошибка ФИО';
-    }
-    if (empty($_POST['PHONE']) || !preg_match('/^[0-9+]+$/', $_POST['PHONE'])) {
-        $errors[] = 'Ошибка Телефона';
-    }
-    if (empty($_POST['EMAIL']) || !filter_var($_POST['EMAIL'], FILTER_VALIDATE_EMAIL)) {
-        $errors[] = 'Ошибка ЕМАИЛ';
-    }
-    $dateObject = DateTime::createFromFormat('Y-m-d', $_POST['BIRTHDATE']);
-    if ($dateObject === false || $dateObject->format('Y-m-d') !== $_POST['BIRTHDATE']) {
-        $errors[] = 'Ошибка Дата рождения';
-    }
-    if ($_POST['GENDER'] != 'male' && $_POST['GENDER'] != 'female') {
-        $errors[] = 'Ошибка пола';
-    }
-    if (empty($_POST['BIOGRAFY'])) {
-        $errors[] = 'Ошибка биографии';
-    }
-    if (count($errors) > 0) {
-        foreach ($errors as $error) {
-            echo "<div class='error'>$error</div>";
-        }
-    } else {
-        // Generate unique login and password if not logged in
-        if (empty($username) && empty($password)) {
-            list($username, $password) = generateLoginPassword();
-            $_SESSION['logged_in'] = true;
-            $_SESSION['username'] = $username;
-            $_SESSION['password'] = $password;
-        }
-        // Save data to database
-        try {
-            $conn = new PDO("mysql:host=localhost;dbname=$dbname", $username, $password);
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $sql = "INSERT INTO REQUEST (FIO, PHONE, EMAIL, BIRTHDATE, GENDER, BIOGRAFY) VALUES (?, ?, ?, ?, ?, ?)";
-            $stmt = $conn->prepare($sql);
-            $stmt->execute([$_POST['FIO'], $_POST['PHONE'], $_POST['EMAIL'], $_POST['BIRTHDATE'], $_POST['GENDER'], $_POST['BIOGRAFY']]);
-            $lastId = $conn->lastInsertId();
-            $Lang_selection = "SELECT Lang_ID FROM Lang_Prog WHERE Lang_NAME = ?";
-            $Lang_prepare = $conn->prepare($Lang_selection);
-            $Answer_insert = "INSERT INTO ANSWER (ID, Lang_ID) VALUES (?, ?)";
-            $Answer_prepare = $conn->prepare($Answer_insert);
-            foreach ($_POST['Lang_Prog'] as $lang) {
-                $Lang_prepare->execute([$lang]);
-                $lang_ID = $Lang_prepare->fetchColumn();
-                $Answer_prepare->execute([$lastId, $lang_ID]);
-            }
-            echo nl2br("\nNew record created successfully");
-        } catch (PDOException $e) {
-            echo "Connection failed: " . $e->getMessage();
-        }
-        $conn = null;
-    }
-}
-
-// Display form
-include('form.php');
-
-// Display saved data if logged in
-if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] === true) {
+include("../Secret.php");
+$username = username;
+$password = password;
+$dbname = username;
+if (isset($_SESSION['login']) && isset($_SESSION['password'])) {
+    // Если сессия уже существует, то загружаем данные из базы данных и отображаем их в форме
     try {
         $conn = new PDO("mysql:host=localhost;dbname=$dbname", $username, $password);
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        $sql = "SELECT * FROM REQUEST WHERE FIO = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([$_SESSION['username']]);
-        $result = $stmt->fetch();
-        echo "<h2>Ваши данные:</h2>";
-        echo "<p>ФИО: " . $result['FIO'] . "</p>";
-        echo "<p>Телефон: " .$result['PHONE'] . "</p>";
-        echo "<p>Email: " . $result['EMAIL'] . "</p>";
-        echo "<p>Дата рождения: " . $result['BIRTHDATE'] . "</p>";
-        echo "<p>Пол: " . $result['GENDER'] . "</p>";
-        echo "<p>Биография: " . $result['BIOGRAFY'] . "</p>";
+        $stmt = $conn->prepare("SELECT * FROM REQUEST WHERE login = ? AND password = ?");
+        $stmt->execute([$_SESSION['login'], $_SESSION['password']]);
+        $user = $stmt->fetch();
+        if ($user) {
+            $values['FIO'] = $user['FIO'];
+            $values['PHONE'] = $user['PHONE'];
+            $values['EMAIL'] = $user['EMAIL'];
+            $values['BIRTHDATE'] = $user['BIRTHDATE'];
+            $values['GENDER'] = $user['GENDER'];
+            $values['BIOGRAFY'] = $user['BIOGRAFY'];
+            $stmt = $conn->prepare("SELECT Lang_NAME FROM ANSWER INNER JOIN Lang_Prog ON ANSWER.Lang_ID = Lang_Prog.Lang_ID WHERE ID = ?");
+            $stmt->execute([$user['ID']]);
+            $values['Lang_Prog'] = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        }
     } catch (PDOException $e) {
-        echo "Connection failed: " . $e->getMessage();
+        $mas[] = "Connection failed: " . $e->getMessage();
     }
     $conn = null;
+} else {
+    // Если сессия не существует, то генерируем новый логин и пароль и сохраняем их в сессии
+    $login = generateRandomString(10);
+    $password = generateRandomString(15);
+    $_SESSION['login'] = $login;
+    $_SESSION['password'] = $password;
 }
+// Function to generate a random string
+function generateRandomString($length = 10) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, strlen($characters) - 1)];
+    }
+    return $randomString;
+}
+
+
+
+
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+  $messages=array();
+    // В суперглобальном массиве $_GET PHP хранит все параметры, переданные в текущем запросе через URL.
+    if (!empty($_COOKIE['SAVE'])) {
+      // Если есть параметр save, то выводим сообщение пользователю.
+      $mase=unserialize($_COOKIE['MAS']);
+      foreach($mase as $m){$messages[]=$m;}
+      setcookie('SAVE', '', 100000);
+      setcookie('MAS', '', 100000);
+    $messages[]='Спасибо, результаты сохранены.';
+    }
+    // Включаем содержимое файла form.php
+    $errors=array();
+    $errors['FIO']=!empty($_COOKIE['FIO_error']);
+    $errors['PHONE']=!empty($_COOKIE['PHONE_error']);
+    $errors['EMAIL']=!empty($_COOKIE['EMAIL_error']);
+    $errors['BIRTHDATE']=!empty($_COOKIE['BIRTHDATE_error']);
+    $errors['GENDER']=!empty($_COOKIE['GENDER_error']);
+    $errors['BIOGRAFY']=!empty($_COOKIE['BIOGRAFY_error']);
+    $errors['Lang_Prog']=!empty($_COOKIE['Lang_Prog_error']);
+    if($errors['FIO']){
+      setcookie('FIO_error', '', time() - 24 * 60 * 60);
+      setcookie('FIO_error', '', time() - 24 * 60 * 60);
+      $messages[] = '<div class="error">Заполните имя.</div>';
+    }
+    if($errors['PHONE']){
+      setcookie('PHONE_error', '', time() - 24 * 60 * 60);
+      setcookie('PHONE_error', '', time() - 24 * 60 * 60);
+      $messages[] = '<div class="error">Заполните номер телефона.</div>';
+    }
+    if($errors['EMAIL']){
+      setcookie('EMAIL_error', '', time() - 24 * 60 * 60);
+      setcookie('EMAIL_error', '', time() - 24 * 60 * 60);
+      $messages[] = '<div class="error">Заполните почту.</div>';
+    }
+    if($errors['BIRTHDATE']){
+      setcookie('BIRTHDATE_error', '', time() - 24 * 60 * 60);
+      setcookie('BIRTHDATE_error', '', time() - 24 * 60 * 60);
+      $messages[] = '<div class="error">Заполните дату рождения.</div>';
+    }
+    if($errors['GENDER']){
+      setcookie('GENDER_error', '', time() - 24 * 60 * 60);
+      setcookie('GENDER_error', '', time() - 24 * 60 * 60);
+      $messages[] = '<div class="error">Заполните гендер).</div>';
+    }
+    if($errors['BIOGRAFY']){
+      setcookie('BIOGRAFY_error', '', time() - 24 * 60 * 60);
+      setcookie('BIOGRAFY_error', '', time() - 24 * 60 * 60);
+      $messages[] = '<div class="error">Заполните биографию.</div>';
+    }
+    if($errors['Lang_Prog']){
+      setcookie('Lang_Prog_error', '', time() - 24 * 60 * 60);
+      setcookie('Lang_Prog_error', '', time() - 24 * 60 * 60);
+      $messages[] = '<div class="error">Выберите язык.</div>';
+    }
+
+    //дополнительный enter))
+    $values = array();
+    $values['FIO'] = empty($_COOKIE['FIO_value']) ? '' : $_COOKIE['FIO_value'];
+    $values['PHONE'] = empty($_COOKIE['PHONE_value']) ? '' : $_COOKIE['PHONE_value'];
+    $values['EMAIL'] = empty($_COOKIE['EMAIL_value']) ? '' : $_COOKIE['EMAIL_value'];
+    $values['BIRTHDATE'] = empty($_COOKIE['BIRTHDATE_value']) ? '' : $_COOKIE['BIRTHDATE_value'];
+    $values['GENDER'] = empty($_COOKIE['GENDER_value']) ? '' : $_COOKIE['GENDER_value'];
+    $values['BIOGRAFY'] = empty($_COOKIE['BIOGRAFY_value']) ? '' : $_COOKIE['BIOGRAFY_value'];
+    $values['Lang_Prog'] = empty($_COOKIE['Lang_Prog_value']) ? array() : unserialize($_COOKIE['Lang_Prog_value']);
+    include('form.php');
+    // Завершаем работу скрипта.
+    exit();
+  }
+  include("../Secret.php");
+$username = username;
+$password = password;
+$dbname = username;
+
+$fio = $phone = $email = $birthdate = $gender = '';
+$fio = $_POST['FIO'];
+$phone = $_POST['PHONE'];
+$email = $_POST['EMAIL'];
+$birthdate = $_POST['BIRTHDATE'];
+$gender = $_POST['GENDER'];
+$biografy = $_POST['BIOGRAFY'];
+$langs = isset($_POST['Lang_Prog']) ? (array)$_POST['Lang_Prog'] : [];
+$langs_check = ['Pascal', 'C', 'C++', 'JavaScript', 'PHP', 'Python', 'Java', 'Haskel', 'Clojure', 'Prolog', 'Scala'];
+function checkLangs($langs, $langs_check) {
+    for ($i = 0; $i < count($langs); $i++) {
+        $isTrue = FALSE;
+        for ($j = 0; $j < count($langs_check); $j++) {
+            if ($langs[$i] === $langs_check[$j]) {
+                $isTrue = TRUE;
+                break;
+            }
+        }
+        if ($isTrue === FALSE) return FALSE;
+    }
+    return TRUE;
+}
+
+// Generate a unique login and password
+$login = generateRandomString(10);
+$password = generateRandomString(15);
+
+
+if ($_SERVER['REQUEST_METHOD'] != 'POST') {
+    echo 'This script only works with POST queries';
+    exit();
+}
+
+$errors = FALSE;
+
+if (empty($_POST['FIO']) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,150}$/u', $_POST['FIO'])) {
+    $errors = TRUE;
+    setcookie('FIO_error', '1', time() + 24 * 60 * 60);
+}
+else{
+  setcookie('FIO_value', $_POST['FIO'], time() + 30 * 24 * 60 * 60);
+}
+
+if (empty($phone) || !preg_match('/^[0-9+]+$/', $phone)) {
+    $errors = TRUE;
+    setcookie('PHONE_error', '1', time() + 24 * 60 * 60);
+}
+else{
+  setcookie('PHONE_value', $_POST['PHONE'], time() + 30 * 24 * 60 * 60);
+}
+
+if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    $errors = TRUE;
+    setcookie('EMAIL_error', '1', time() + 24 * 60 * 60);
+}
+else{
+  setcookie('EMAIL_value', $_POST['EMAIL'], time() + 30 * 24 * 60 * 60);
+}
+
+
+$dateObject = DateTime::createFromFormat('Y-m-d', $birthdate);
+if ($dateObject === false || $dateObject->format('Y-m-d') !== $birthdate) {
+    $errors = TRUE;
+    setcookie('BIRTHDATE_error', '1', time() + 24 * 60 * 60);
+}
+else{
+  setcookie('BIRTHDATE_value', $_POST['BIRTHDATE'], time() + 30 * 24 * 60 * 60);
+}
+
+if ($gender != 'male' && $gender != 'female') {
+    $errors = TRUE;
+    setcookie('GENDER_error', '1', time() + 24 * 60 * 60);
+}
+else{
+  setcookie('GENDER_value', $_POST['GENDER'], time() + 30 * 24 * 60 * 60);
+}
+
+if (empty($biografy)) {
+  $errors = TRUE;
+  setcookie('BIOGRAFY_error', '1', time() + 24 * 60 * 60);
+}
+else{
+setcookie('BIOGRAFY_value', $_POST['BIOGRAFY'], time() + 30 * 24 * 60 * 60);
+}
+if (empty($langs)) {
+  $errors = TRUE;
+  setcookie('Lang_Prog_error', '1', time() + 24 * 60 * 60);
+}
+else{
+setcookie('Lang_Prog_value', serialize($_POST['Lang_Prog']), time() + 30 * 24 * 60 * 60);
+}
+$mas=array();
+// Иначе, если запрос был методом POST, т.е. нужно проверить данные и сохранить их в XML-файл.
+if ($errors) {
+  // При наличии ошибок перезагружаем страницу и завершаем работу скрипта.
+  header('Location: index.php');
+  exit();
+}
+else {
+  // Удаляем Cookies с признаками ошибок.
+  setcookie('FIO_error', '', 100000);
+  setcookie('PHONE_error', '', 100000);
+  setcookie('EMAIL_error', '', 100000);
+  setcookie('BIRTHDATE_error', '', 100000);
+  setcookie('GENDER_error', '', 100000);
+  setcookie('BIOGRAFY_error', '', 100000);
+  setcookie('Lang_Prog_error', '', 100000);
+  // TODO: тут необходимо удалить остальные Cookies.
+
+  
+}
+try {
+    $conn = new PDO("mysql:host=localhost;dbname=$dbname", $username, $password);
+    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    echo "Connected successfully ";
+
+    // Insert the user data into the database, including the generated login and password
+    $sql = "INSERT INTO REQUEST (FIO, PHONE, EMAIL, BIRTHDATE, GENDER, BIOGRAFY, login, password) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$fio, $phone, $email, $birthdate, $gender, $biografy, $login, $password]);
+
+    
+    // Display the generated login and password to the user once
+    echo '<div class="success">Your unique login: ' . $login . ' and password: ' . $password . ' have been generated. Please save them for future reference.</div>';
+    $lastId = $conn->lastInsertId();
+    $Lang_selection = "SELECT Lang_ID FROM Lang_Prog WHERE Lang_NAME = ?";
+    $Lang_prepare = $conn->prepare($Lang_selection);
+    $Answer_insert = "INSERT INTO ANSWER (ID, Lang_ID) VALUES (?, ?)";
+    $Answer_prepare = $conn->prepare($Answer_insert);
+    foreach($_POST['Lang_Prog'] as $lang){
+        $Lang_prepare->execute([$lang]);
+        $lang_ID=$Lang_prepare->fetchColumn();
+        $Answer_prepare->execute([$lastId,$lang_ID]);
+    }
+
+} catch(PDOException $e) {
+    $mas[]="Connection failed: " . $e->getMessage();
+}
+$conn = null;
+// Сохраняем куки с признаком успешного сохранения.
+setcookie('SAVE', '1');
+setcookie('MAS', serialize($mas));
+// Делаем перенаправление.
+header('Location: index.php');
 ?>
+
+
+

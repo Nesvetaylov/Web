@@ -231,7 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 
     if ($errors) {
-        header('Location: indexindex5.phpu.php'); //если есть ошибки перезагружаем
+        header('Location: index.php'); //если есть ошибки перезагружаем
         exit();
       } else {
         setcookie('FIO_error', '', -10000); //удалемя куки ошибок
@@ -313,5 +313,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
   setcookie('save', '1');//сохранили куку о сохранении
   header('Location: index.php'); //перезагрузка
+
+
 }
 ?>

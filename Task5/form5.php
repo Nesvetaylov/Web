@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
     <meta charset="utf-8">
     <title>
-        <a 4 Задание>
+        <a 5 Задание>
         </a>
     </title>
 </head>
@@ -23,7 +23,7 @@
       print('</div>');
     }
 ?>
-<form class='form-container' action="index5.php" method="POST">
+<form class='form-container' action="index.php" method="POST">
         <label>
           <strong> Фамилия имя отчество:</strong>
           <br>

@@ -181,7 +181,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         setcookie('BIRTHDATE_value', $_POST['BIRTHDATE'], time() + 30 * 24 * 60 * 60);
     }
 
-    $GenderCheck = $_POST['GENDER'] == "1" || $_POST['GENDER'] == "2" || $_POST['GENDER'] == "3";
+    $GenderCheck = $_POST['GENDER'] == "1" || $_POST['GENDER'] == "2";
     if (empty($_POST['GENDER']) || !$GenderCheck) {
         setcookie('GENDER_error', '1', time() + 24 * 60 * 60);
         $errors = TRUE;
@@ -313,6 +313,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
   setcookie('save', '1');//сохранили куку о сохранении
   header('Location: index.php'); //перезагрузка
+
+
+
+
+
+
+
+
+
+
+
 
 
 

@@ -231,7 +231,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 
     if ($errors) {
-        header('Location: index.php'); //если есть ошибки перезагружаем
+        header('Location: indexindex5.phpu.php'); //если есть ошибки перезагружаем
         exit();
       } else {
         setcookie('FIO_error', '', -10000); //удалемя куки ошибок
@@ -279,7 +279,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
   } else {
     // генерируем логин и пароль
-    $login = substr(uniqid(), 3);
+    $login = substr(uniqID(), 3);
     $pass = rand(1000000, 9999999);
     // сохраняем в куки
     setcookie('login', $login);
@@ -294,7 +294,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       $newForm = "INSERT INTO PERSON_LOGIN (login, FIO, PHONE, EMAIL, BIRTHDATE, GENDER, BIOGRAFY) VALUES (?, ?, ?, ?, ?, ?, ?)";
       $formReq = $db->prepare($newForm);
       $formReq->execute([$login, $_POST['FIO'], $_POST['PHONE'], $_POST['EMAIL'], $_POST['BIRTHDATE'], $_POST['GENDER'], $_POST['BIOGRAFY']]);
-      $userID = $db->lastInsertId();
+      $userID = $db->lastInsertID();
       //и заполняет языки
       $lang = "SELECT ID FROM LANG WHERE ID = ?";
       $feed = "INSERT INTO PERSON_LANG (U_ID, LANG_ID) VALUES (?, ?)";
@@ -313,19 +313,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
   setcookie('save', '1');//сохранили куку о сохранении
   header('Location: index.php'); //перезагрузка
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 ?>

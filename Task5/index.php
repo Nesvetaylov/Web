@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $hasErrors = true;
     }
 
-    // если куки не пустые то массив заполняется данными из куки, иначе ''
+    // если куки не пустые то массив зIDаполняется данными из куки, иначе ''
     $values = array(); 
     $values['FIO'] = empty($_COOKIE['FIO_value']) ? '' : $_COOKIE['FIO_value'];
     $values['PHONE'] = empty($_COOKIE['PHONE_value']) ? '' : $_COOKIE['PHONE_value'];
@@ -115,7 +115,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $result->execute([$_SESSION['login']]); //подстановка значения в ?
             $row = $result->fetch(); //из результата запроса выбирает 1 строку и сохран в row 
             // выписывает из строки значения в values
-            $formid = $row['id'];
+            $formID = $row['id'];
             $values['FIO'] = $row['FIO'];
             $values['PHONE'] = $row['PHONE'];
             $values['EMAIL'] = $row['EMAIL'];
@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $values['BIOGRAFY'] = $row['BIOGRAFY'];
             $select = "SELECT LANG_id FROM PERSON_LANG WHERE U_id = ?";
             $result = $db->prepare($select);
-            $result->execute([$formid]);
+            $result->execute([$formID]);
             $list = array();
             while ($row = $result->fetch()) {
               $list[] = $row['LANG_id'];
@@ -255,13 +255,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       $select = "SELECT lp.id FROM PERSON_LOGIN lp, LOGIN lg WHERE lg.login = '$login' AND lp.login = lg.login";
       $result = $db->query($select);
       $row = $result->fetch();
-      $formid = $row['id'];
+      $formID = $row['id'];
       // изменение данных в форме
-      $updateForm = "UPDATE PERSON_LOGIN SET FIO = ?, PHONE = ?, EMAIL = ?, BIRTHDATE = ?, GENDER = ?, BIOGRAFY = ? WHERE id = '$formid'";
+      $updateForm = "UPDATE PERSON_LOGIN SET FIO = ?, PHONE = ?, EMAIL = ?, BIRTHDATE = ?, GENDER = ?, BIOGRAFY = ? WHERE id = '$formID'";
       $formReq = $db->prepare($updateForm);
       $formReq->execute([$_POST['FIO'], $_POST['PHONE'], $_POST['EMAIL'], $_POST['BIRTHDATE'], $_POST['GENDER'], $_POST['BIOGRAFY']]);
       // удаляем прошлые языки
-      $deleteLangs = "DELETE FROM PERSON_LANG WHERE id = '$formid'";
+      $deleteLangs = "DELETE FROM PERSON_LANG WHERE id = '$formID'";
       $delReq = $db->query($deleteLangs);
       // заполняем заново языки
       $lang = "SELECT id FROM LANG WHERE id = ?";
@@ -270,8 +270,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       $feedPrep = $db->prepare($feed);
       foreach ($_POST['LANG'] as $selection) {
         $langPrep->execute([$selection]);
-        $langid = $langPrep->fetchColumn();
-        $feedPrep->execute([$formid, $langid]);
+        $langID = $langPrep->fetchColumn();
+        $feedPrep->execute([$formID, $langID]);
       }
     } catch (PDOException $e) {
       setcookie('DBERROR', 'Error : ' . $e->getMessage());
@@ -280,10 +280,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   } else {
     // генерируем логин и пароль
     $login = substr(uniqid(), 3);
-    $pass = rand(1000000, 9999999);
+    $password = rand(1000000, 9999999);
     // сохраняем в куки
     setcookie('login', $login);
-    setcookie('pass', $pass);
+    setcookie('pass', $password);
     $_SESSION['hasLogged'] = false;
 
     try {
@@ -294,7 +294,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       $newForm = "INSERT INTO PERSON_LOGIN (login, FIO, PHONE, EMAIL, BIRTHDATE, GENDER, BIOGRAFY) VALUES (?, ?, ?, ?, ?, ?, ?)";
       $formReq = $db->prepare($newForm);
       $formReq->execute([$login, $_POST['FIO'], $_POST['PHONE'], $_POST['EMAIL'], $_POST['BIRTHDATE'], $_POST['GENDER'], $_POST['BIOGRAFY']]);
-      $userid = $db->lastInsertid();
+      $userID = $db->lastInsertid();
       //и заполняет языки
       $lang = "SELECT id FROM LANG WHERE id = ?";
       $feed = "INSERT INTO PERSON_LANG (U_id, LANG_id) VALUES (?, ?)";
@@ -302,8 +302,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       $feedPrep = $db->prepare($feed);
       foreach ($_POST['selections'] as $selection) {
         $langPrep->execute([$selection]);
-        $langid = $langPrep->fetchColumn();
-        $feedPrep->execute([$userid, $langid]);
+        $langID = $langPrep->fetchColumn();
+        $feedPrep->execute([$userID, $langID]);
       }
     } catch (PDOException $e) {
       setcookie('DBERROR', 'Error : ' . $e->getMessage());
@@ -313,17 +313,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
   setcookie('save', '1');//сохранили куку о сохранении
   header('Location: index.php'); //перезагрузка
-
-
-
-
-
-
-
-
-
-
-
 
 
 

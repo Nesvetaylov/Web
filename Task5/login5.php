@@ -8,7 +8,7 @@ if ($_COOKIE[session_name()] && session_start()) {
     if (!empty($_GET['EXIT'])) {
         // выход (окончание сессии session_destroy() при нажатии на кнопку Выход).
         session_destroy();
-        header('Location: index5.php');
+        header('Location: index.php');
         exit();
     }
     if (!empty($_SESSION['hasLogged']) && $_SESSION['hasLogged'] = true) {

@@ -313,19 +313,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
   setcookie('save', '1');//сохранили куку о сохранении
   header('Location: index.php'); //перезагрузка
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
 ?>

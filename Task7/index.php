@@ -281,7 +281,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       // изменение данных в форме
       $updateForm = "UPDATE PERSON_LOGIN SET FIO = ?, PHONE = ?, EMAIL = ?, BIRTHDATE = ?, GENDER = ?, BIOGRAFY = ? WHERE id = '$formID'";
       $formReq = $db->prepare($updateForm);
-      $formReq->execute([(isset($_POST['FIO']) ? $_POST['FIO'] : ''), (isset($_POST['PHONE']) ? $_POST['PHONE'] : ''), (isset($_POST['EMAIL']) ? $_POST['EMAIL'] : ''), (isset($_POST['BIRTHDATE']) ? $_POST['BIRTHDATE'] : ''), (isset($_POST['GENDER']) ? $_POST['GENDER'] : ''), (isset($_POST['BIOGRAFY']) ? $_POST['BIOGRAFY'] : '')]);
+      $formReq->execute([$login, $_POST['FIO'], $_POST['PHONE'], $_POST['EMAIL'], $_POST['BIRTHDATE'], $_POST['GENDER'], $_POST['BIOGRAFY']]);
       // удаляем прошлые языки
       $deleteLangs = "DELETE FROM PERSON_LANG WHERE id = '$formID'";
       $delReq = $db->query($deleteLangs);

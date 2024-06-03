@@ -37,59 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 <br>
                 <input type="submit" value="Войти" />
     </form>
-    <style>
-        .fomaa {
-            width: 50%;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #b0e0e6;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        form {
-            width: 50%;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #b0e0e6;
-            border-radius: 10px;
-            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            color: #000080;
-        }
-
-        strong {
-            display: block;
-            margin: 10px 0;
-            color: #000080;
-        }
-
-        input[type="text"],
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #000080;
-            border-radius: 5px;
-            box-sizing: border-box;
-            font-size: 16px;
-            margin-bottom: 10px;
-        }
-
-        input[type="submit"] {
-            background-color: #000080;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 10px;
-        }
-
-        input[type="submit"]:hover {
-            background-color: #0000cd;
-        }
-    </style>
     <?php
 }
 // Иначе, если запрос был методом POST, т.е. нужно сделать авторизацию с записью логина в сессию.

@@ -1,4 +1,4 @@
 <?php
-const userr = 'u67281';
-const passs = '9872763';
+const username = 'u67281';
+const password = '9872763';
 ?>

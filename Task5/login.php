@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
 
         input[type="text"],
-        input[type="passwordword"] {
+        input[type="password"] {
             width: 100%;
             padding: 10px;
             border: 1px solid #000080;
@@ -95,11 +95,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 // Иначе, если запрос был методом POST, т.е. нужно сделать авторизацию с записью логина в сессию.
 else {
     include ('../Secret.php');
-    $user = username;
+    $username = username;
     $password = password;
     $db = new PDO(
-        "mysql:host=localhost;dbname=$user",
-        $user,
+        "mysql:host=localhost;dbname=$username",
+        $username,
         $password,
         [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
@@ -112,7 +112,7 @@ else {
             session_start();
         }
         while ($row = $result->fetch()) {
-            if ($_POST['login'] == $row['login'] && md5($_POST['password']) == $row['passwordword']) {
+            if ($_POST['login'] == $row['login'] && md5($_POST['password']) == $row['password']) {
                 $loginFlag = true;
                 break;
             }

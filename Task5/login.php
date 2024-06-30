@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 else {
     include ('../Secret.php');
     $user = username;
-    $password = passwords;
+    $password = password;
     $db = new PDO(
         "mysql:host=localhost;dbname=$user",
         $user,

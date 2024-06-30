@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 <strong>
                     Пароль:
                 </strong>
-                <input name="password" />
+                <input name="pass" />
                 <br>
                 <input type="submit" value="Войти" />
     </form>
@@ -95,12 +95,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 // Иначе, если запрос был методом POST, т.е. нужно сделать авторизацию с записью логина в сессию.
 else {
     include ('../Secret.php');
-    $username = username;
-    $password = password;
+    $user = userr;
+    $pass = passs;
     $db = new PDO(
-        "mysql:host=localhost;dbname=$username",
-        $username,
-        $password,
+        "mysql:host=localhost;dbname=$user",
+        $user,
+        $pass,
         [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
     // проверка наличия логина в базе данных
@@ -112,7 +112,7 @@ else {
             session_start();
         }
         while ($row = $result->fetch()) {
-            if ($_POST['login'] == $row['login'] && md5($_POST['password']) == $row['password']) {
+            if ($_POST['login'] == $row['login'] && md5($_POST['pass']) == $row['password']) {
                 $loginFlag = true;
                 break;
             }
@@ -126,11 +126,11 @@ else {
     if ($loginFlag) {
         $_SESSION['hasLogged'] = true;
         $_SESSION['login'] = $_POST['login'];
-        $_SESSION['password'] = $_POST['password'];
+        $_SESSION['pass'] = $_POST['pass'];
     } else {
         $_SESSION['hasLogged'] = false;
         $_SESSION['login'] = '';
-        $_SESSION['password'] = '';
+        $_SESSION['pass'] = '';
         setcookie('AUTHERROR', 'Неверный логин или пароль');
     }
 

@@ -105,7 +105,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
   if ($isStarted && !empty($_COOKIE[session_name()]) && !empty($_SESSION['hasLogged']) && $_SESSION['hasLogged']) {
     include ('../Secret.php');
-    $username = usernamer;
+    $username = username;
     $password = passwords;
     $db = new PDO(
       "mysql:host=localhost;dbname=$username",
@@ -151,7 +151,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   include ('../Secret.php');
-  $username = usernamer;
+  $username = username;
   $password = passwords;
   $db = new PDO(
     "mysql:host=localhost;dbname=$username",

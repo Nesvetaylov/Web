@@ -18,16 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     setcookie('save', '', 100000);
     $messages[] = 'Спасибо, результаты сохранены.';
     // Если в куках есть пароль, то выводим сообщение.
-    if (!empty($_COOKIE['password'])) {
+    if (!empty($_COOKIE['pass'])) {
       $messages[] = sprintf(
         'Вы можете войти с логином <strong>%s</strong> паролем <strong>%s</strong> для повторного входа.<br>',
         strip_tags($_COOKIE['login']),
-        strip_tags($_COOKIE['password'])
+        strip_tags($_COOKIE['pass'])
       );
     }
     setcookie('save', '', time() - 3600);
     setcookie('login', '', time() - 3600);
-    setcookie('password', '', time() - 3600);
+    setcookie('pass', '', time() - 3600);
   }
 
   //если куки пустые
@@ -105,12 +105,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
   if ($isStarted && !empty($_COOKIE[session_name()]) && !empty($_SESSION['hasLogged']) && $_SESSION['hasLogged']) {
     include ('../Secret.php');
-    $username = username;
-    $password = password;
+    $user = userr;
+    $pass = passs;
     $db = new PDO(
-      "mysql:host=localhost;dbname=$username",
-      $username,
-      $password,
+      "mysql:host=localhost;dbname=$user",
+      $user,
+      $pass,
       [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
     );
 
@@ -151,12 +151,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
   include ('../Secret.php');
-  $username = username;
-  $password = password;
+  $user = userr;
+  $pass = passs;
   $db = new PDO(
-    "mysql:host=localhost;dbname=$username",
-    $username,
-    $password,
+    "mysql:host=localhost;dbname=$user",
+    $user,
+    $pass,
     [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
   );
 
@@ -292,21 +292,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   } else {
     // генерируем логин и пароль
     $login = substr(uniqid(), 3);
-    $password = rand(1000000, 9999999);
+    $pass = rand(1000000, 9999999);
     // сохраняем в куки
     setcookie('login', $login);
-    setcookie('password', $password);
+    setcookie('pass', $pass);
     $_SESSION['hasLogged'] = false;
 
     try {
-      $newusername = "INSERT INTO Logi (login, password) VALUES (?, ?)";
-      $request = $db->prepare($newusername);
-      $request->execute([$login, md5($password)]); // сохранил логин и хеш пароля
+      $newUser = "INSERT INTO Logi (login, password) VALUES (?, ?)";
+      $request = $db->prepare($newUser);
+      $request->execute([$login, md5($pass)]); // сохранил логин и хеш пароля
       //добавляем данные формы нового пользователя  в бд
       $newForm = "INSERT INTO LogPerson (login, fio, phone, mail, birthdate, pol, biog) VALUES (?, ?, ?, ?, ?, ?, ?)";
       $formReq = $db->prepare($newForm);
       $formReq->execute([$login, $_POST['fio'], $_POST['phone'], $_POST['mail'], $_POST['birthdate'], $_POST['pol'], $_POST['biog']]);
-      $usernameID = $db->lastInsertId();
+      $userID = $db->lastInsertId();
       //и заполняет языки
       $lang = "SELECT id FROM Lang WHERE id = ?";
       $feed = "INSERT INTO person_and_lang (id_u, id_l) VALUES (?, ?)";
@@ -315,7 +315,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       foreach ($_POST['selections'] as $selection) {
         $langPrep->execute([$selection]);
         $langID = $langPrep->fetchColumn();
-        $feedPrep->execute([$usernameID, $langID]);
+        $feedPrep->execute([$userID, $langID]);
       }
     } catch (PDOException $e) {
       setcookie('DBERROR', 'Error : ' . $e->getMessage());

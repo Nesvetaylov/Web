@@ -87,7 +87,7 @@ input[type="submit"] {
 }
 
 input[type="submit"]:hover {
-    background-color: #0000cd;
+    background-color: #000000;
 }
     </style>
     <?php

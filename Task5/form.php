@@ -25,7 +25,7 @@
     <form action="index.php" method="POST">
 
       <h3 id="forma">
-        ФОРМА ДЛЯ ПОДПИСКИ НА РАССЫЛКУ С ЦИТАТИМИ ПРЕПОДАВАТЕЛЕЙ ФКТИПМ
+        ФОРМА
       </h3>
 
       <label>
@@ -83,10 +83,6 @@
       <label>
         <input type="radio" name="pol" required value="2"  <?php if ($values['pol']==='2') {print 'checked';}?>  >
         Женский
-      </label>
-      <label>
-        <input type="radio" name="pol" required value="3" <?php if ($values['pol']==='3') {print 'checked';}?> >
-        Ламинат
       </label>
       <br>
 

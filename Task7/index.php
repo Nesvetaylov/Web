@@ -2,6 +2,7 @@
 header('Content-Type: text/html; charset=UTF-8');
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+        include ('../Secret.php');
     session_set_cookie_params(time() + 24 * 60 * 60);
     $isStarted = session_start();
     if($isStarted && !empty($_COOKIE[session_name()])) {

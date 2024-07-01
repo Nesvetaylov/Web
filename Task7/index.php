@@ -1,6 +1,11 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8');
 
+include ('../Secret.php');
+$username = username;
+$password = password;
+$db = new PDO("mysql:host=localhost;dbname=$username",$username,$password,
+[PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     session_set_cookie_params(time() + 24 * 60 * 60);
     $isStarted = session_start();

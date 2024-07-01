@@ -2,7 +2,6 @@
 header('Content-Type: text/html; charset=UTF-8');
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-        include ('../Secret.php');
     session_set_cookie_params(time() + 24 * 60 * 60);
     $isStarted = session_start();
     if($isStarted && !empty($_COOKIE[session_name()])) {
@@ -113,7 +112,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     include ('../Secret.php');
     $username = username;
     $password = password;
-    $db = new PDO("mysql:host=localhost;dbname=$username",$username,$password,[PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+    $db = new PDO("mysql:host=localhost;dbname=$username",$username,$password,
+    [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
 
     try {
       $select = "SELECT * FROM LogPerson WHERE login = ?"; //текстр запроса
@@ -258,13 +258,12 @@ if (empty($_POST['gender']) ||!$genderCheck) {
     setcookie('biografy_error', '', 100000);
     setcookie('check_error', '', 100000);
   }
-
-  if ($isStarted && !empty($_COOKIE[session_name()]) && !empty($_SESSION['hasLogged']) && $_SESSION['hasLogged']) {
+  $isStarted = session_start();
     include ('../Secret.php');
     $username = username;
     $password = password;
-    $db = new PDO("mysql:host=localhost;dbname=$username",$username,$password,[PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
-  $isStarted = session_start();
+    $db = new PDO("mysql:host=localhost;dbname=$username",$username,$password,
+    [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
   if ($isStarted && !empty($_COOKIE[session_name()]) && !empty($_SESSION['hasLogged'])) {
     // перезапись данных в бд
     try {
@@ -332,6 +331,5 @@ if (empty($_POST['gender']) ||!$genderCheck) {
   setcookie('save', '1');//сохранили куку о сохранении
   header('Location: index.php'); //перезагрузка
 
-}
 }
 ?>

@@ -332,4 +332,5 @@ if (empty($_POST['gender']) ||!$genderCheck) {
   header('Location: index.php'); //перезагрузка
 
 }
+}
 ?>

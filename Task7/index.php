@@ -168,7 +168,7 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST")
     setcookie('phone_value', htmlspecialchars($_POST['phone']), time() + 30 * 24 * 60 * 60); // Сохраняем значение с экранированием HTML-символов.
   }
   // email
-  if (empty($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_email)) {
+  if (empty($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_FILTER_VALIDATE_EMAIL)) {
     setcookie('email_error', '1', time() + 24 * 60 * 60);
     $errors = TRUE;
   } else {

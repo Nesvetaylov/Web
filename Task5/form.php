@@ -13,7 +13,6 @@
     <?php
       if (!empty($messages)) {
         print('<div id="messages">');
-        // Выводим сообщения.
         foreach ($messages as $message) {
           print($message);
         }

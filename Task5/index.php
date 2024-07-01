@@ -2,8 +2,8 @@
 header('Content-Type: text/html; charset=UTF-8');
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-  $isStarted = session_start(); //начало сессии
-  $messages = array(); //массив сообщений для пользователя
+  $isStarted = session_start(); 
+  $messages = array(); 
 
   //вывод ошибок из куков
   if (!empty($_COOKIE['DBERROR'])) {
@@ -17,7 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   if (!empty($_COOKIE['save'])) {
     setcookie('save', '', 100000);
     $messages[] = 'Спасибо, результаты сохранены.';
-    // Если в куках есть пароль, то выводим сообщение.
     if (!empty($_COOKIE['password'])) {
       $messages[] = sprintf(
         'Вы можете войти с логином <strong>%s</strong> паролем <strong>%s</strong> для повторного входа.<br>',
@@ -30,7 +29,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     setcookie('password', '', time() - 3600);
   }
 
-  //если куки пустые
   $hasErrors = false;
   $errors = array();
   $errors['fio'] = !empty($_COOKIE['fio_error']);
@@ -92,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   }
 
 
-  $values = array(); // если куки не пустые то массив заполняется данными из куки, иначе ''
+  $values = array(); 
   $values['fio'] = empty($_COOKIE['fio_value']) ? '' : $_COOKIE['fio_value'];
   $values['phone'] = empty($_COOKIE['phone_value']) ? '' : $_COOKIE['phone_value'];
   $values['mail'] = empty($_COOKIE['mail_value']) ? '' : $_COOKIE['mail_value'];
@@ -115,11 +113,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     );
 
     try {
-      $select = "SELECT * FROM LogPerson WHERE login = ?"; //текстр запроса
-      $result = $db->prepare($select); //подготовка запроса 
-      $result->execute([$_SESSION['login']]); //подстановка значения в ?
-      $row = $result->fetch(); //из результата запроса выбирает 1 строку и сохран в row 
-      // выписывает из строки значения в values
+      $select = "SELECT * FROM LogPerson WHERE login = ?"; 
+      $result = $db->prepare($select); 
+      $result->execute([$_SESSION['login']]); 
+      $row = $result->fetch(); 
       $formID = $row['id'];
       $values['fio'] = $row['fio'];
       $values['phone'] = $row['phone'];
@@ -139,9 +136,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       $messages[] = 'Ошибка при загрузке формы из базы данных:<br>' . $e->getMessage();
     }
     $messages[] = "Выполнен вход с логином: <strong>" . $_SESSION['login'] . '</strong><br>';
-    $messages[] = '<a href="login.php?exit=1">Выход из аккаунта</a>'; // вывод ссылки для выхода
+    $messages[] = '<a href="login.php?exit=1">Выход из аккаунта</a>'; 
   }
-  // если не вошел, то вывести ссылку для входа
   elseif ($isStarted && !empty($_COOKIE[session_name()])) {
     $messages[] = '<a href="login.php">Войти в аккаунт</a><br>.';
   }
@@ -243,10 +239,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
 
   if ($errors) {
-    header('Location: index.php'); //если есть ошибки перезагружаем
+    header('Location: index.php'); 
     exit();
   } else {
-    setcookie('fio_error', '', -10000); //удалемя куки ошибок
+    setcookie('fio_error', '', -10000); 
     setcookie('phone_error', '', -10000);
     setcookie('mail_error', '', -10000);
     setcookie('year_error', '', -10000);
@@ -260,22 +256,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
   $isStarted = session_start();
   if ($isStarted && !empty($_COOKIE[session_name()]) && !empty($_SESSION['hasLogged'])) {
-    // перезапись данных в бд
     try {
-      // получаем форму для данного логина
       $login = $_SESSION['login'];
       $select = "SELECT f.id FROM LogPerson f, Logi l WHERE l.login = '$login' AND f.login = l.login";
       $result = $db->query($select);
       $row = $result->fetch();
       $formID = $row['id'];
-      // изменение данных в форме
       $updateForm = "UPDATE LogPerson SET fio = ?, phone = ?, mail = ?, birthdate = ?, pol = ?, biog = ? WHERE id = '$formID'";
       $formReq = $db->prepare($updateForm);
       $formReq->execute([$_POST['fio'], $_POST['phone'], $_POST['mail'], $_POST['birthdate'], $_POST['pol'], $_POST['biog']]);
-      // удаляем прошлые языки
       $deleteLangs = "DELETE FROM person_and_lang WHERE id = '$formID'";
       $delReq = $db->query($deleteLangs);
-      // заполняем заново языки
       $lang = "SELECT id FROM Lang WHERE id = ?";
       $feed = "INSERT INTO person_and_lang (id_u, id_l) VALUES (?, ?)";
       $langPrep = $db->prepare($lang);
@@ -290,10 +281,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       exit();
     }
   } else {
-    // генерируем логин и пароль
     $login = substr(uniqid(), 3);
     $password = rand(1000000, 9999999);
-    // сохраняем в куки
     setcookie('login', $login);
     setcookie('password', $password);
     $_SESSION['hasLogged'] = false;
@@ -301,13 +290,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     try {
       $newUser = "INSERT INTO Logi (login, password) VALUES (?, ?)";
       $request = $db->prepare($newUser);
-      $request->execute([$login, md5($password)]); // сохранил логин и хеш пароля
-      //добавляем данные формы нового пользователя  в бд
+      $request->execute([$login, md5($password)]); 
       $newForm = "INSERT INTO LogPerson (login, fio, phone, mail, birthdate, pol, biog) VALUES (?, ?, ?, ?, ?, ?, ?)";
       $formReq = $db->prepare($newForm);
       $formReq->execute([$login, $_POST['fio'], $_POST['phone'], $_POST['mail'], $_POST['birthdate'], $_POST['pol'], $_POST['biog']]);
       $userID = $db->lastInsertId();
-      //и заполняет языки
       $lang = "SELECT id FROM Lang WHERE id = ?";
       $feed = "INSERT INTO person_and_lang (id_u, id_l) VALUES (?, ?)";
       $langPrep = $db->prepare($lang);
@@ -323,8 +310,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
   }
 
-  setcookie('save', '1');//сохранили куку о сохранении
-  header('Location: index.php'); //перезагрузка
+  setcookie('save', '1');
+  header('Location: index.php');
 
 }
 ?>

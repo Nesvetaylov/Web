@@ -189,12 +189,12 @@ elseif ($_SERVER["REQUEST_METHOD"] == "POST")
   }
   // gender
   $genderCheck = $_POST['gender'] == "male" || $_POST['gender'] == "female";
-  if (empty($_POST['gender']) || !$genderCheck) {
+if (empty($_POST['gender']) || !$genderCheck) {
     setcookie('gender_error', '1', time() + 24 * 60 * 60);
     $errors = TRUE;
-  } else {
+} else {
     setcookie('gender_value', htmlspecialchars($_POST['gender']), time() + 30 * 24 * 60 * 60); // Сохраняем значение с экранированием HTML-символов.
-  }
+}
   // biografy
   if (empty($_POST['biografy'])) {
     setcookie('biografy_error', '1', time() + 24 * 60 * 60); 

@@ -272,7 +272,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       $row = $result->fetch();
       $formID = $row['id'];
       // изменение данных в форме
-      $updateForm = "UPDATE LogPerson SET fio = ?, phone = ?, email = ?, birthdate = ?, gender = ?, biography = ? WHERE id = '$formID'";
+      $updateForm = "UPDATE LogPerson SET fio = ?, phone = ?, mail = ?, birthdate = ?, gender = ?, biography = ? WHERE id = '$formID'";
       $formReq = $db->prepare($updateForm);
       $formReq->execute([$_POST['fio'], $_POST['phone'], $_POST['email'], $_POST['birthdate'], $_POST['gender'], $_POST['biography']]);
       // удаляем прошлые языки

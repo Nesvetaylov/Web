@@ -110,7 +110,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   $values['selections'] = empty($_COOKIE['selections_value']) ? array() : unserialize($_COOKIE['selections_value']);
   $values['langg'] = empty($_COOKIE['langg_value']) ? array() : unserialize($_COOKIE['langg_value']);
   $values['biografy'] = empty($_COOKIE['biografy_value']) ? '' : $_COOKIE['biografy_value'];
-  $values['V'] = empty($_COOKIE['V_value']) ? '' : $_COOKIE['V_value'];
+  $values['check'] = empty($_COOKIE['check_value']) ? '' : $_COOKIE['check_value'];
 
 
   if ($isStarted && !empty($_COOKIE[session_name()]) && !empty($_SESSION['hasLogged']) && $_SESSION['hasLogged']) {
@@ -226,15 +226,6 @@ if (empty($_POST['gender']) || !$genderCheck) {
     if (!$has_incorrect_lang) {
       setcookie('langg_value', serialize($_POST['langg']), time() + 30 * 24 * 60 * 60);
     }
-  }
-
-  // selections
-  if (empty($_POST['selections'])) {
-    setcookie('selections_error', '1', time() + 24 * 60 * 60);
-    $errors = TRUE;
-  }
-  else {
-    setcookie('selections_value', serialize($_POST['selections']), time() + 30 * 24 * 60 * 60);
   }
   // check
   if (!isset($_POST['check'])) {

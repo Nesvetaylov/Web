@@ -117,8 +117,8 @@
 
       <label>
         <input type="checkbox" name="V"
-          <?php if ($errors['V']) {print 'class="error"';} ?>
-          <?php if (!empty($values['V'])) {print "checked";}; ?>
+          <?php if ($errors['check']) {print 'class="error"';} ?>
+          <?php if (!empty($values['check'])) {print "checked";}; ?>
           />
         c контрактом ознакомлен(а)
       </label>

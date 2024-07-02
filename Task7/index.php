@@ -38,11 +38,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   $errors = array();
   $errors['fio'] = !empty($_COOKIE['fio_error']);
   $errors['phone'] = !empty($_COOKIE['phone_error']);
-  $errors['email'] = !empty($_COOKIE['email_error']);
+  $errors['mail'] = !empty($_COOKIE['mail_error']);
   $errors['birthdate'] = !empty($_COOKIE['birthdate_error']);
-  $errors['gender'] = !empty($_COOKIE['gender_error']);
+  $errors['pol'] = !empty($_COOKIE['pol_error']);
   $errors['langg'] = !empty($_COOKIE['langg_error']);
-  $errors['biography'] = !empty($_COOKIE['biography_error']);
+  $errors['biog'] = !empty($_COOKIE['biog_error']);
   $errors['V'] = !empty($_COOKIE['V_error']);
 
   if ($errors['fio']) {
@@ -57,9 +57,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $messages[] = '<div class="error">Заполните телефон.</div>';
     $hasErrors = true;
   }
-  if ($errors['email']) {
-    setcookie('email_error', '', 100000);
-    setcookie('email_value', '', 100000);
+  if ($errors['mail']) {
+    setcookie('mail_error', '', 100000);
+    setcookie('mail_value', '', 100000);
     $messages[] = '<div class="error">Заполните почту.</div>';
     $hasErrors = true;
   }
@@ -69,9 +69,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $messages[] = '<div class="error">Заполните дату рождения.</div>';
     $hasErrors = true;
   }
-  if ($errors['gender']) {
-    setcookie('gender_error', '', 100000);
-    setcookie('gender_value', '', 100000);
+  if ($errors['pol']) {
+    setcookie('pol_error', '', 100000);
+    setcookie('pol_value', '', 100000);
     $messages[] = '<div class="error">Выберите пол.</div>';
     $hasErrors = true;
   }
@@ -81,9 +81,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $messages[] = '<div class="error">Что-то не так с языком программирования!.</div>';
     $hasErrors = true;
   }
-  if ($errors['biography']) {
-    setcookie('biography_error', '', 100000);
-    setcookie('biography_value', '', 100000);
+  if ($errors['biog']) {
+    setcookie('biog_error', '', 100000);
+    setcookie('biog_value', '', 100000);
     $messages[] = '<div class="error">Заполните биографию.</div>';
     $hasErrors = true;
   }
@@ -98,11 +98,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   $values = array(); // если куки не пустые то массив заполняется данными из куки, иначе ''
   $values['fio'] = empty($_COOKIE['fio_value']) ? '' : $_COOKIE['fio_value'];
   $values['phone'] = empty($_COOKIE['phone_value']) ? '' : $_COOKIE['phone_value'];
-  $values['email'] = empty($_COOKIE['email_value']) ? '' : $_COOKIE['email_value'];
+  $values['mail'] = empty($_COOKIE['mail_value']) ? '' : $_COOKIE['mail_value'];
   $values['birthdate'] = empty($_COOKIE['birthdate_value']) ? '' : $_COOKIE['birthdate_value'];
-  $values['gender'] = empty($_COOKIE['gender_value']) ? '' : $_COOKIE['gender_value'];
+  $values['pol'] = empty($_COOKIE['pol_value']) ? '' : $_COOKIE['pol_value'];
   $values['langg'] = empty($_COOKIE['langg_value']) ? array() : unserialize($_COOKIE['langg_value']);
-  $values['biography'] = empty($_COOKIE['biography_value']) ? '' : $_COOKIE['biography_value'];
+  $values['biog'] = empty($_COOKIE['biog_value']) ? '' : $_COOKIE['biog_value'];
   $values['V'] = empty($_COOKIE['V_value']) ? '' : $_COOKIE['V_value'];
 
 
@@ -126,10 +126,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       $formID = $row['id'];
       $values['fio'] = $row['fio'];
       $values['phone'] = $row['phone'];
-      $values['email'] = $row['email'];
+      $values['mail'] = $row['mail'];
       $values['birthdate'] = $row['birthdate'];
-      $values['gender'] = $row['gender'];
-      $values['biography'] = $row['biography'];
+      $values['pol'] = $row['pol'];
+      $values['biog'] = $row['biog'];
       $select = "SELECT id_l FROM person_and_lang WHERE id_u = ?";
       $result = $db->prepare($select);
       $result->execute([$formID]);
@@ -180,11 +180,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     setcookie('phone_value', htmlspecialchars($_POST['phone']), time() + 30 * 24 * 60 * 60);
   }
 
-  if (empty($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-    setcookie('email_error', '1', time() + 24 * 60 * 60);
+  if (empty($_POST['mail']) || !filter_var($_POST['mail'], FILTER_VALIDATE_mail)) {
+    setcookie('mail_error', '1', time() + 24 * 60 * 60);
     $errors = TRUE;
   } else {
-    setcookie('email_value', htmlspecialchars($_POST['email']), time() + 30 * 24 * 60 * 60);
+    setcookie('mail_value', htmlspecialchars($_POST['mail']), time() + 30 * 24 * 60 * 60);
   }
 
   if (empty($_POST['birthdate'])) {
@@ -194,12 +194,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     setcookie('birthdate_value', htmlspecialchars($_POST['birthdate']), time() + 30 * 24 * 60 * 60);
   }
 
-  $genderCheck = $_POST['gender'] == "1" || $_POST['gender'] == "2";
-  if (empty($_POST['gender']) || !$genderCheck) {
-    setcookie('gender_error', '1', time() + 24 * 60 * 60);
+  $polCheck = $_POST['pol'] == "1" || $_POST['pol'] == "2";
+  if (empty($_POST['pol']) || !$polCheck) {
+    setcookie('pol_error', '1', time() + 24 * 60 * 60);
     $errors = TRUE;
   } else {
-    setcookie('gender_value', htmlspecialchars($_POST['gender']), time() + 30 * 24 * 60 * 60);
+    setcookie('pol_value', htmlspecialchars($_POST['pol']), time() + 30 * 24 * 60 * 60);
   }
 
   if (empty($_POST['langg'])) {
@@ -229,11 +229,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   }
 
 
-  if (empty($_POST['biography'])) {
-    setcookie('biography_error', '1', time() + 24 * 60 * 60);
+  if (empty($_POST['biog'])) {
+    setcookie('biog_error', '1', time() + 24 * 60 * 60);
     $errors = TRUE;
   } else {
-    setcookie('biography_value', $_POST['biography'], time() + 30 * 24 * 60 * 60);
+    setcookie('biog_value', $_POST['biog'], time() + 30 * 24 * 60 * 60);
   }
 
 
@@ -251,13 +251,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   } else {
     setcookie('fio_error', '', -10000); //удалемя куки ошибок
     setcookie('phone_error', '', -10000);
-    setcookie('email_error', '', -10000);
+    setcookie('mail_error', '', -10000);
     setcookie('year_error', '', -10000);
     setcookie('month_error', '', -10000);
     setcookie('day_error', '', -10000);
-    setcookie('gender_error', '', -10000);
+    setcookie('pol_error', '', -10000);
     setcookie('langg_error', '', -10000);
-    setcookie('biography_error', '', -10000);
+    setcookie('biog_error', '', -10000);
     setcookie('V_error', '', -10000);
   }
 
@@ -272,9 +272,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       $row = $result->fetch();
       $formID = $row['id'];
       // изменение данных в форме
-      $updateForm = "UPDATE LogPerson SET fio = ?, phone = ?, mail = ?, birthdate = ?, gender = ?, biography = ? WHERE id = '$formID'";
+      $updateForm = "UPDATE LogPerson SET fio = ?, phone = ?, mail = ?, birthdate = ?, pol = ?, biog = ? WHERE id = '$formID'";
       $formReq = $db->prepare($updateForm);
-      $formReq->execute([$_POST['fio'], $_POST['phone'], $_POST['email'], $_POST['birthdate'], $_POST['gender'], $_POST['biography']]);
+      $formReq->execute([$_POST['fio'], $_POST['phone'], $_POST['mail'], $_POST['birthdate'], $_POST['pol'], $_POST['biog']]);
       // удаляем прошлые языки
       $deleteLangs = "DELETE FROM person_and_lang WHERE id = '$formID'";
       $delReq = $db->query($deleteLangs);
@@ -306,9 +306,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       $request = $db->prepare($newUser);
       $request->execute([$login, md5($password)]); // сохранил логин и хеш пароля
       //добавляем данные формы нового пользователя  в бд
-      $newForm = "INSERT INTO LogPerson (login, fio, phone, email, birthdate, gender, biography) VALUES (?, ?, ?, ?, ?, ?, ?)";
+      $newForm = "INSERT INTO LogPerson (login, fio, phone, mail, birthdate, pol, biog) VALUES (?, ?, ?, ?, ?, ?, ?)";
       $formReq = $db->prepare($newForm);
-      $formReq->execute([$login, $_POST['fio'], $_POST['phone'], $_POST['email'], $_POST['birthdate'], $_POST['gender'], $_POST['biography']]);
+      $formReq->execute([$login, $_POST['fio'], $_POST['phone'], $_POST['mail'], $_POST['birthdate'], $_POST['pol'], $_POST['biog']]);
       $userID = $db->lastInsertId();
       //и заполняет языки
       $lang = "SELECT id FROM Lang WHERE id = ?";

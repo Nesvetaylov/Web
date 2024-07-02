@@ -2,7 +2,11 @@
 header('Content-Type: text/html; charset=UTF-8');
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+  session_set_cookie_params(time() + 24 * 60 * 60);
   $isStarted = session_start();
+  if($isStarted && !empty($_COOKIE[session_name()])) {
+    session_regenerate_id();
+  }
   $messages = array(); //массив сообщений для пользователя
   //вывод ошибок из куков
   if (!empty($_COOKIE['DBERROR'])) {

@@ -262,10 +262,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   }
 
   $isStarted = session_start();
-  include ('../Secret.php');
-  $username = username;
-  $password = password;
-  $db = new PDO("mysql:host=localhost;dbname=$username",$username,$password,[PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
   if ($isStarted && !empty($_COOKIE[session_name()]) && !empty($_SESSION['hasLogged'])) {
     // перезапись данных в бд
     try {

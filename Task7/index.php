@@ -1,19 +1,13 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8');
 
-include ('../Secret.php');
-$username = username;
-$password = password;
-$db = new PDO("mysql:host=localhost;dbname=$username",$username,$password,
-[PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    session_set_cookie_params(time() + 24 * 60 * 60);
-    $isStarted = session_start();
-    if($isStarted && !empty($_COOKIE[session_name()])) {
-      session_regenerate_id();
-    }
-    $messages = array(); //массив сообщений для пользователя
-
+  session_set_cookie_params(time() + 24 * 60 * 60);
+  $isStarted = session_start();
+  if($isStarted && !empty($_COOKIE[session_name()])) {
+    session_regenerate_id();
+  }
+  $messages = array(); //массив сообщений для пользователя
   //вывод ошибок из куков
   if (!empty($_COOKIE['DBERROR'])) {
     $messages[] = $_COOKIE['DBERROR'] . '<br><br>';
@@ -48,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   $errors['birthdate'] = !empty($_COOKIE['birthdate_error']);
   $errors['gender'] = !empty($_COOKIE['gender_error']);
   $errors['langg'] = !empty($_COOKIE['langg_error']);
-  $errors['biografy'] = !empty($_COOKIE['biografy_error']);
+  $errors['biography'] = !empty($_COOKIE['biography_error']);
   $errors['V'] = !empty($_COOKIE['V_error']);
 
   if ($errors['fio']) {
@@ -87,9 +81,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $messages[] = '<div class="error">Что-то не так с языком программирования!.</div>';
     $hasErrors = true;
   }
-  if ($errors['biografy']) {
-    setcookie('biografy_error', '', 100000);
-    setcookie('biografy_value', '', 100000);
+  if ($errors['biography']) {
+    setcookie('biography_error', '', 100000);
+    setcookie('biography_value', '', 100000);
     $messages[] = '<div class="error">Заполните биографию.</div>';
     $hasErrors = true;
   }
@@ -107,9 +101,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   $values['email'] = empty($_COOKIE['email_value']) ? '' : $_COOKIE['email_value'];
   $values['birthdate'] = empty($_COOKIE['birthdate_value']) ? '' : $_COOKIE['birthdate_value'];
   $values['gender'] = empty($_COOKIE['gender_value']) ? '' : $_COOKIE['gender_value'];
-  $values['selections'] = empty($_COOKIE['selections_value']) ? array() : unserialize($_COOKIE['selections_value']);
   $values['langg'] = empty($_COOKIE['langg_value']) ? array() : unserialize($_COOKIE['langg_value']);
-  $values['biografy'] = empty($_COOKIE['biografy_value']) ? '' : $_COOKIE['biografy_value'];
+  $values['biography'] = empty($_COOKIE['biography_value']) ? '' : $_COOKIE['biography_value'];
   $values['V'] = empty($_COOKIE['V_value']) ? '' : $_COOKIE['V_value'];
 
 
@@ -117,8 +110,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     include ('../Secret.php');
     $username = username;
     $password = password;
-    $db = new PDO("mysql:host=localhost;dbname=$username",$username,$password,
-    [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+    $db = new PDO(
+      "mysql:host=localhost;dbname=$username",
+      $username,
+      $password,
+      [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+    );
 
     try {
       $select = "SELECT * FROM LogPerson WHERE login = ?"; //текстр запроса
@@ -132,7 +129,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       $values['email'] = $row['email'];
       $values['birthdate'] = $row['birthdate'];
       $values['gender'] = $row['gender'];
-      $values['biografy'] = $row['biografy'];
+      $values['biography'] = $row['biography'];
       $select = "SELECT id_l FROM person_and_lang WHERE id_u = ?";
       $result = $db->prepare($select);
       $result->execute([$formID]);
@@ -154,54 +151,57 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
   include ('form.php');
 
-}
-// Иначе, если запрос был методом POST, т.е. нужно проверить данные и сохранить их в XML-файл.
-elseif ($_SERVER["REQUEST_METHOD"] == "POST")
-{
-  $errors = FALSE; // Проверяем ошибки.
-  // fio
-  if (empty($_POST['fio'])) {
-    setcookie('fio_error', '1', time() + 24 * 60 * 60); // Выдаем куку на день с флажком об ошибке в поле fio.
+} elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+  include ('../Secret.php');
+  $username = username;
+  $password = password;
+  $db = new PDO(
+    "mysql:host=localhost;dbname=$username",
+    $username,
+    $password,
+    [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
+  );
+
+
+  $errors = FALSE;
+  if (empty($_POST['fio']) || !preg_match('/^[а-яА-ЯёЁa-zA-Z\s-]{1,150}$/u', $_POST['fio'])) {
+    setcookie('fio_error', '1', time() + 24 * 60 * 60);
     $errors = TRUE;
   } else {
-    setcookie('fio_value', htmlspecialchars($_POST['fio']), time() + 30 * 24 * 60 * 60); // Сохраняем ранее введенное в форму значение на месяц с экранированием HTML-символов.
+    setcookie('fio_value', htmlspecialchars($_POST['fio']), time() + 30 * 24 * 60 * 60);
   }
-  // phone
-  if (empty($_POST['phone']) || !preg_match('/^(\+\d{11})$/', $_POST['phone'])) {
+
+
+  if (empty($_POST['phone']) || !preg_match('/^\+[0-9]{11}$/', $_POST['phone'])) {
     setcookie('phone_error', '1', time() + 24 * 60 * 60);
     $errors = TRUE;
   } else {
-    setcookie('phone_value', htmlspecialchars($_POST['phone']), time() + 30 * 24 * 60 * 60); // Сохраняем значение с экранированием HTML-символов.
+    setcookie('phone_value', htmlspecialchars($_POST['phone']), time() + 30 * 24 * 60 * 60);
   }
-  // email
+
   if (empty($_POST['email']) || !filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
     setcookie('email_error', '1', time() + 24 * 60 * 60);
     $errors = TRUE;
   } else {
-    setcookie('email_value', htmlspecialchars($_POST['email']), time() + 30 * 24 * 60 * 60); // Сохраняем значение с экранированием HTML-символов.
+    setcookie('email_value', htmlspecialchars($_POST['email']), time() + 30 * 24 * 60 * 60);
   }
-  // birthdate
-  if (empty($_POST['birthdate']) || !preg_match('/^\d{4}\-\d{2}\-\d{2}$/', $_POST['birthdate'])) {
+
+  if (empty($_POST['birthdate'])) {
     setcookie('birthdate_error', '1', time() + 24 * 60 * 60);
     $errors = TRUE;
   } else {
-    setcookie('birthdate_value', htmlspecialchars($_POST['birthdate']), time() + 30 * 24 * 60 * 60); // Сохраняем значение с экранированием HTML-символов.
+    setcookie('birthdate_value', htmlspecialchars($_POST['birthdate']), time() + 30 * 24 * 60 * 60);
   }
-  // gender
-  $genderCheck = $_POST['gender'] == "male" || $_POST['gender'] == "female";
-if (empty($_POST['gender']) || !$genderCheck) {
+
+  $genderCheck = $_POST['gender'] == "1" || $_POST['gender'] == "2";
+  if (empty($_POST['gender']) || !$genderCheck) {
     setcookie('gender_error', '1', time() + 24 * 60 * 60);
     $errors = TRUE;
-} else {
-    setcookie('gender_value', htmlspecialchars($_POST['gender']), time() + 30 * 24 * 60 * 60); // Сохраняем значение с экранированием HTML-символов.
-}
-  // biografy
-  if (empty($_POST['biografy'])) {
-    setcookie('biografy_error', '1', time() + 24 * 60 * 60); 
-    $errors = TRUE;
   } else {
-    setcookie('biografy_value', htmlspecialchars($_POST['biografy']), time() + 30 * 24 * 60 * 60); // Сохраняем значение с экранированием HTML-символов.
+    setcookie('gender_value', htmlspecialchars($_POST['gender']), time() + 30 * 24 * 60 * 60);
   }
+
   if (empty($_POST['langg'])) {
     setcookie('langg_error', '1', time() + 24 * 60 * 60);
     $errors = TRUE;
@@ -228,43 +228,44 @@ if (empty($_POST['gender']) || !$genderCheck) {
     }
   }
 
-  // selections
-  if (empty($_POST['selections'])) {
-    setcookie('selections_error', '1', time() + 24 * 60 * 60);
+
+  if (empty($_POST['biography'])) {
+    setcookie('biography_error', '1', time() + 24 * 60 * 60);
     $errors = TRUE;
-  }
-  else {
-    setcookie('selections_value', serialize($_POST['selections']), time() + 30 * 24 * 60 * 60);
-  }
-  // check
-  if (!isset($_POST['check'])) {
-    setcookie('check_error', '1', time() + 24 * 60 * 60); 
-    $errors = TRUE;
-  }
-  else {
-    setcookie('check_value', $_POST['check'], time() + 30 * 24 * 60 * 60);
+  } else {
+    setcookie('biography_value', $_POST['biography'], time() + 30 * 24 * 60 * 60);
   }
 
+
+  if (empty($_POST['V'])) {
+    setcookie('V_error', '1', time() + 24 * 60 * 60);
+    $errors = TRUE;
+  } else {
+    setcookie('V_value', $_POST['V'], time() + 30 * 24 * 60 * 60);
+  }
+
+
   if ($errors) {
-    header('Location: index.php'); // При наличии ошибок перезагружаем страницу и завершаем работу скрипта.
+    header('Location: index.php'); //если есть ошибки перезагружаем
     exit();
+  } else {
+    setcookie('fio_error', '', -10000); //удалемя куки ошибок
+    setcookie('phone_error', '', -10000);
+    setcookie('email_error', '', -10000);
+    setcookie('year_error', '', -10000);
+    setcookie('month_error', '', -10000);
+    setcookie('day_error', '', -10000);
+    setcookie('gender_error', '', -10000);
+    setcookie('langg_error', '', -10000);
+    setcookie('biography_error', '', -10000);
+    setcookie('V_error', '', -10000);
   }
-  else {
-    setcookie('fio_error', '', 100000); // Удаляем Cookies с признаками ошибок.
-    setcookie('phone_error', '', 100000);
-    setcookie('email_error', '', 100000);
-    setcookie('birthdate_error', '', 100000);
-    setcookie('gender_error', '', 100000);
-    setcookie('selections_error', '', 100000);
-    setcookie('biografy_error', '', 100000);
-    setcookie('check_error', '', 100000);
-  }
+
   $isStarted = session_start();
-    include ('../Secret.php');
-    $username = username;
-    $password = password;
-    $db = new PDO("mysql:host=localhost;dbname=$username",$username,$password,
-    [PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
+  include ('../Secret.php');
+  $username = username;
+  $password = password;
+  $db = new PDO("mysql:host=localhost;dbname=$username",$username,$password,[PDO::ATTR_PERSISTENT => true, PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]);
   if ($isStarted && !empty($_COOKIE[session_name()]) && !empty($_SESSION['hasLogged'])) {
     // перезапись данных в бд
     try {
@@ -275,9 +276,9 @@ if (empty($_POST['gender']) || !$genderCheck) {
       $row = $result->fetch();
       $formID = $row['id'];
       // изменение данных в форме
-      $updateForm = "UPDATE LogPerson SET fio = ?, phone = ?, email = ?, birthdate = ?, gender = ?, biografy = ? WHERE id = '$formID'";
+      $updateForm = "UPDATE LogPerson SET fio = ?, phone = ?, email = ?, birthdate = ?, gender = ?, biography = ? WHERE id = '$formID'";
       $formReq = $db->prepare($updateForm);
-      $formReq->execute([$_POST['fio'], $_POST['phone'], $_POST['email'], $_POST['birthdate'], $_POST['gender'], $_POST['biografy']]);
+      $formReq->execute([$_POST['fio'], $_POST['phone'], $_POST['email'], $_POST['birthdate'], $_POST['gender'], $_POST['biography']]);
       // удаляем прошлые языки
       $deleteLangs = "DELETE FROM person_and_lang WHERE id = '$formID'";
       $delReq = $db->query($deleteLangs);
@@ -309,9 +310,9 @@ if (empty($_POST['gender']) || !$genderCheck) {
       $request = $db->prepare($newUser);
       $request->execute([$login, md5($password)]); // сохранил логин и хеш пароля
       //добавляем данные формы нового пользователя  в бд
-      $newForm = "INSERT INTO LogPerson (login, fio, phone, email, birthdate, gender, biografy) VALUES (?, ?, ?, ?, ?, ?, ?)";
+      $newForm = "INSERT INTO LogPerson (login, fio, phone, email, birthdate, gender, biography) VALUES (?, ?, ?, ?, ?, ?, ?)";
       $formReq = $db->prepare($newForm);
-      $formReq->execute([$login, $_POST['fio'], $_POST['phone'], $_POST['email'], $_POST['birthdate'], $_POST['gender'], $_POST['biografy']]);
+      $formReq->execute([$login, $_POST['fio'], $_POST['phone'], $_POST['email'], $_POST['birthdate'], $_POST['gender'], $_POST['biography']]);
       $userID = $db->lastInsertId();
       //и заполняет языки
       $lang = "SELECT id FROM Lang WHERE id = ?";

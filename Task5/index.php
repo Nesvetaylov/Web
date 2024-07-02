@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   $errors['langg'] = !empty($_COOKIE['langg_error']);
   $errors['biog'] = !empty($_COOKIE['biog_error']);
   $errors['V'] = !empty($_COOKIE['V_error']);
+  $errors['Zach'] = !empty($_COOKIE['Zach_error']);
 
   if ($errors['fio']) {
     setcookie('fio_error', '', 100000);
@@ -86,6 +87,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     setcookie('V_error', '', 100000);
     setcookie('V_value', '', 100000);
     $messages[] = '<div class="error">Подтвердите согласие.</div>';
+    $hasErrors = true;
+  }
+  if ($errors['Zach']) {
+    setcookie('Zach_error', '', 100000);
+    setcookie('Zach_value', '', 100000);
+    $messages[] = '<div class="error">Подтвердите зачёт.</div>';
     $hasErrors = true;
   }
 

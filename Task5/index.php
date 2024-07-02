@@ -99,6 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   $values['langg'] = empty($_COOKIE['langg_value']) ? array() : unserialize($_COOKIE['langg_value']);
   $values['biog'] = empty($_COOKIE['biog_value']) ? '' : $_COOKIE['biog_value'];
   $values['V'] = empty($_COOKIE['V_value']) ? '' : $_COOKIE['V_value'];
+  $values['Zach'] = empty($_COOKIE['Zach_value']) ? '' : $_COOKIE['Zach_value'];
 
 
   if ($isStarted && !empty($_COOKIE[session_name()]) && !empty($_SESSION['hasLogged']) && $_SESSION['hasLogged']) {
@@ -124,6 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       $values['birthdate'] = $row['birthdate'];
       $values['pol'] = $row['pol'];
       $values['biog'] = $row['biog'];
+      $values['Zach'] = $row['Zach'];
       $select = "SELECT id_l FROM person_and_lang WHERE id_u = ?";
       $result = $db->prepare($select);
       $result->execute([$formID]);
@@ -291,9 +293,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       $newUser = "INSERT INTO Logi (login, password) VALUES (?, ?)";
       $request = $db->prepare($newUser);
       $request->execute([$login, md5($password)]); 
-      $newForm = "INSERT INTO LogPerson (login, fio, phone, mail, birthdate, pol, biog) VALUES (?, ?, ?, ?, ?, ?, ?)";
+      $newForm = "INSERT INTO LogPerson (login, fio, phone, mail, birthdate, pol, biog, Zach) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
       $formReq = $db->prepare($newForm);
-      $formReq->execute([$login, $_POST['fio'], $_POST['phone'], $_POST['mail'], $_POST['birthdate'], $_POST['pol'], $_POST['biog']]);
+      $formReq->execute([$login, $_POST['fio'], $_POST['phone'], $_POST['mail'], $_POST['birthdate'], $_POST['pol'], $_POST['biog'], $_POST['Zach']]);
       $userID = $db->lastInsertId();
       $lang = "SELECT id FROM Lang WHERE id = ?";
       $feed = "INSERT INTO person_and_lang (id_u, id_l) VALUES (?, ?)";

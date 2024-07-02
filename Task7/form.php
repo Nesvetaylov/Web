@@ -111,7 +111,7 @@
         <strong>
           Биография:
         </strong>
-        <textarea name="biografy" <?php if ($errors['biografy']) {print 'class="error"';} ?> placeholder="Hi, i'm learning PHP 0_0"><?php print $values['biografy']; ?>
+        <textarea name="biography" <?php if ($errors['biography']) {print 'class="error"';} ?> placeholder="Hi, i'm learning PHP 0_0"><?php print $values['biography']; ?>
         </textarea>
       </label>
 

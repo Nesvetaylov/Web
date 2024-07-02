@@ -295,7 +295,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     setcookie('login', $login);
     setcookie('password', $password);
     $_SESSION['hasLogged'] = false;
-
+    $ok=1;
+    $nok=0;
+    if($_POST['Zach']='on'){
+      $_POST['Zach']=$ok;
+    }
+    else {
+      $_POST['Zach']=$nok;
+    }
     try {
       $newUser = "INSERT INTO Logi (login, password) VALUES (?, ?)";
       $request = $db->prepare($newUser);

@@ -1,4 +1,4 @@
-<?php
+o<?php
 header('Content-Type: text/html; charset=UTF-8');
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -318,7 +318,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       exit();
     }
   }
-
+echo($_POST['Zach']);
+  exit();
   setcookie('save', '1');
   header('Location: index.php');
 

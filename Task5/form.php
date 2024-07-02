@@ -38,6 +38,13 @@
           placeholder="ФИО" />
       </label>
       <br>
+      <label>
+        <input type="checkbox" name="Zach"
+          <?php if ($errors['Zach']) {print 'class="error"';} ?>
+          <?php if (!empty($values['Zach'])) {print "checked";}; ?>
+          />
+        Зачёт
+      </label>
 
       <label>
         <strong>

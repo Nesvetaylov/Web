@@ -180,7 +180,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     setcookie('phone_value', htmlspecialchars($_POST['phone']), time() + 30 * 24 * 60 * 60);
   }
 
-  if (empty($_POST['mail']) || !filter_var($_POST['mail'], FILTER_VALIDATE_mail)) {
+  if (empty($_POST['mail']) || !filter_var($_POST['mail'], FILTER_VALIDATE_EMAIL)) {
     setcookie('mail_error', '1', time() + 24 * 60 * 60);
     $errors = TRUE;
   } else {

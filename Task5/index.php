@@ -325,8 +325,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
       exit();
     }
   }
-echo($_POST['Zach']);
-  exit();
   setcookie('save', '1');
   header('Location: index.php');
 

@@ -56,10 +56,10 @@
         <strong>
           Введите вашу почту:
         </strong>
-        <input name="email" type="email" 
-          <?php if ($errors['email']) {print 'class="error"';} ?>
-          value="<?php print $values['email']; ?>"        
-          placeholder="email" />
+        <input name="mail" type="mail" 
+          <?php if ($errors['mail']) {print 'class="error"';} ?>
+          value="<?php print $values['mail']; ?>"        
+          placeholder="mail" />
       </label>
       <br>
 
@@ -77,11 +77,11 @@
         Пол:
       </strong>
       <label>
-        <input type="radio" name="gender" required value="1" <?php if ($values['gender']==='1') {print 'checked';}?> >
+        <input type="radio" name="pol" required value="1" <?php if ($values['pol']==='1') {print 'checked';}?> >
         Мужской
       </label>
       <label>
-        <input type="radio" name="gender" required value="2"  <?php if ($values['gender']==='2') {print 'checked';}?>  >
+        <input type="radio" name="pol" required value="2"  <?php if ($values['pol']==='2') {print 'checked';}?>  >
         Женский
       </label>
       <br>
@@ -111,7 +111,7 @@
         <strong>
           Биография:
         </strong>
-        <textarea name="biography" <?php if ($errors['biography']) {print 'class="error"';} ?> placeholder="Hi, i'm learning PHP 0_0"><?php print $values['biography']; ?>
+        <textarea name="biog" <?php if ($errors['biog']) {print 'class="error"';} ?> placeholder="Hi, i'm learning PHP 0_0"><?php print $values['biog']; ?>
         </textarea>
       </label>
 

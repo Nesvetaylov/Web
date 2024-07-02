@@ -2,6 +2,7 @@
 header('Content-Type: text/html; charset=UTF-8');
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+  $isStarted = session_start();
   $messages = array(); //массив сообщений для пользователя
   //вывод ошибок из куков
   if (!empty($_COOKIE['DBERROR'])) {
